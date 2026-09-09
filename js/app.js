@@ -62,26 +62,156 @@ function updateThemeBtnText(text, iconClass) {
     if (themeText) themeText.textContent = text;
 }
 
-// Student Profile
-function initProfile() {
-    const studentNameEl = document.getElementById('sidebarStudentName');
-    const avatarEl = document.getElementById('profileAvatar');
-    if (studentNameEl) studentNameEl.textContent = state.studentName;
-    if (avatarEl) avatarEl.textContent = state.studentName.charAt(0).toUpperCase() || 'H';
-
-    const changeNameBtn = document.getElementById('changeNameBtn');
-    if (changeNameBtn) {
-        changeNameBtn.addEventListener('click', () => {
-            const newName = prompt('Nhập tên của bạn để lưu tiến độ học tập:', state.studentName);
-            if (newName && newName.trim()) {
-                state.studentName = newName.trim();
-                localStorage.setItem('toeic_student_name', state.studentName);
-                if (studentNameEl) studentNameEl.textContent = state.studentName;
-                if (avatarEl) avatarEl.textContent = state.studentName.charAt(0).toUpperCase();
-            }
-        });
+// Google Form Auto-reporting Submitter
+function submitStudentNameToGoogleForm(fullName, className = '') {
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdBYSjnvRG1YtyOUu8I6ONHzhPnWBcP_UNDvgfEEe6rY6uu-A/formResponse";
+    const entryId = "entry.388968236";
+    const reportValue = className ? `${fullName} - Lớp: ${className}` : fullName;
+    
+    try {
+        const iframe = document.createElement('iframe');
+        iframe.name = 'hidden_google_form_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        const form = document.createElement('form');
+        form.action = formUrl;
+        form.method = 'POST';
+        form.target = 'hidden_google_form_iframe';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = entryId;
+        input.value = reportValue;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+        
+        setTimeout(() => {
+            if (form.parentNode) document.body.removeChild(form);
+            if (iframe.parentNode) document.body.removeChild(iframe);
+        }, 1500);
+    } catch (e) {
+        console.warn('Google Form submit log:', e);
     }
 }
+
+// Student Profile & Login Overlay Handling
+function initProfile() {
+    const nameEntryOverlay = document.getElementById('nameEntryOverlay');
+    const studentNameInput = document.getElementById('studentNameInput');
+    const studentClassInput = document.getElementById('studentClassInput');
+    const nameInputError = document.getElementById('nameInputError');
+    const startLearningBtn = document.getElementById('startLearningBtn');
+    const sidebarProfileBox = document.getElementById('sidebarProfileBox');
+    const sidebarStudentName = document.getElementById('sidebarStudentName');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const changeNameBtn = document.getElementById('changeNameBtn');
+
+    function checkStudentName() {
+        const savedName = localStorage.getItem('toeic_student_name');
+        const savedClass = localStorage.getItem('toeic_student_class') || '';
+        
+        if (!savedName || savedName.trim() === '' || savedName === 'Học Viên') {
+            if (nameEntryOverlay) {
+                nameEntryOverlay.style.display = 'flex';
+                nameEntryOverlay.style.opacity = '1';
+            }
+            if (sidebarProfileBox) sidebarProfileBox.style.display = 'none';
+        } else {
+            state.studentName = savedName;
+            if (nameEntryOverlay) nameEntryOverlay.style.display = 'none';
+            if (sidebarProfileBox) {
+                sidebarProfileBox.style.display = 'flex';
+                sidebarStudentName.textContent = savedClass ? `${savedName} (${savedClass})` : savedName;
+                profileAvatar.textContent = savedName.trim().charAt(0).toUpperCase();
+            }
+        }
+    }
+
+    if (startLearningBtn && studentNameInput) {
+        startLearningBtn.addEventListener('click', () => {
+            const name = studentNameInput.value.trim();
+            const className = studentClassInput ? studentClassInput.value.trim() : '';
+            
+            if (!name) {
+                if (nameInputError) nameInputError.style.display = 'block';
+                studentNameInput.style.borderColor = '#ef4444';
+                studentNameInput.focus();
+                return;
+            }
+
+            state.studentName = name;
+            localStorage.setItem('toeic_student_name', name);
+            if (className) {
+                localStorage.setItem('toeic_student_class', className);
+            } else {
+                localStorage.removeItem('toeic_student_class');
+            }
+
+            // Report to Miss Nguyet's Google Form
+            submitStudentNameToGoogleForm(name, className);
+
+            if (nameInputError) nameInputError.style.display = 'none';
+            studentNameInput.style.borderColor = 'var(--border-color)';
+            
+            if (nameEntryOverlay) {
+                nameEntryOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    nameEntryOverlay.style.display = 'none';
+                }, 350);
+            }
+
+            if (sidebarProfileBox) {
+                sidebarProfileBox.style.display = 'flex';
+                sidebarStudentName.textContent = className ? `${name} (${className})` : name;
+                profileAvatar.textContent = name.charAt(0).toUpperCase();
+            }
+
+            showToast(`Chào mừng học viên ${name} đến với TOEIC WRITING!`, 'warning');
+        });
+
+        studentNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (studentClassInput && !studentClassInput.value.trim()) {
+                    studentClassInput.focus();
+                } else {
+                    startLearningBtn.click();
+                }
+            }
+        });
+
+        if (studentClassInput) {
+            studentClassInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') startLearningBtn.click();
+            });
+        }
+    }
+
+    if (changeNameBtn) {
+        changeNameBtn.addEventListener('click', () => {
+            const currentName = localStorage.getItem('toeic_student_name') || '';
+            const currentClass = localStorage.getItem('toeic_student_class') || '';
+            if (studentNameInput) studentNameInput.value = currentName === 'Học Viên' ? '' : currentName;
+            if (studentClassInput) studentClassInput.value = currentClass;
+            if (nameInputError) nameInputError.style.display = 'none';
+            if (studentNameInput) studentNameInput.style.borderColor = 'var(--border-color)';
+            
+            if (nameEntryOverlay) {
+                nameEntryOverlay.style.display = 'flex';
+                setTimeout(() => {
+                    nameEntryOverlay.style.opacity = '1';
+                }, 10);
+            }
+            if (studentNameInput) studentNameInput.focus();
+        });
+    }
+
+    // Run initial name check
+    checkStudentName();
+}
+
 
 // Navigation & Sidebar
 function initNavigation() {

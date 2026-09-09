@@ -24,6 +24,34 @@
         <div class="blob blob-3"></div>
     </div>
 
+    <!-- Student Name Login Overlay Modal -->
+    <div id="nameEntryOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 8, 18, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.4s ease;">
+        <div class="glass-panel" style="max-width: 480px; width: 92%; padding: 40px 32px; border-radius: 24px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);">
+            <div style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--color-cyan), var(--color-purple)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; font-size: 2rem; color: white; box-shadow: 0 0 25px rgba(0, 242, 254, 0.35);">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            
+            <div class="badge-tag ets-badge mb-2"><i class="fa-solid fa-sparkles"></i> TOEIC WRITING TASK 01</div>
+            <h2 style="font-size: 1.85rem; margin-bottom: 8px; font-weight: 800; font-family: var(--font-heading); color: var(--text-primary);">THÔNG TIN HỌC VIÊN</h2>
+            <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6; margin-bottom: 24px;">Chào mừng bạn đến với chuyên trang luyện viết TOEIC cùng Miss Nguyệt. Vui lòng nhập họ tên của bạn để bắt đầu bài học.</p>
+            
+            <div style="position: relative; margin-bottom: 16px;">
+                <i class="fa-solid fa-user" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.05rem;"></i>
+                <input type="text" id="studentNameInput" placeholder="Nhập họ và tên học viên..." style="width: 100%; padding: 14px 16px 14px 44px; border-radius: 14px; background: rgba(0, 0, 0, 0.25); border: 1.5px solid var(--border-color); color: var(--text-primary); font-size: 1.05rem; outline: none; transition: all 0.2s;" />
+                <div id="nameInputError" style="color: #ef4444; font-size: 0.85rem; margin-top: 6px; text-align: left; display: none; font-weight: 600;"><i class="fa-solid fa-circle-exclamation"></i> Họ và tên không được để trống!</div>
+            </div>
+
+            <div style="position: relative; margin-bottom: 24px;">
+                <i class="fa-solid fa-school" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.05rem;"></i>
+                <input type="text" id="studentClassInput" placeholder="Nhập tên lớp / mã lớp (không bắt buộc)..." style="width: 100%; padding: 14px 16px 14px 44px; border-radius: 14px; background: rgba(0, 0, 0, 0.25); border: 1.5px solid var(--border-color); color: var(--text-primary); font-size: 1.05rem; outline: none; transition: all 0.2s;" />
+            </div>
+            
+            <button class="btn btn-primary" id="startLearningBtn" style="width: 100%; padding: 14px; font-size: 1.1rem; border-radius: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, var(--color-cyan), var(--color-purple)); border: none; cursor: pointer; color: white; box-shadow: 0 4px 20px rgba(0, 242, 254, 0.25);">
+                VÀO HỌC NGAY <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Mobile Navigation Toggle Button -->
     <button class="menu-toggle-btn" id="menuToggleBtn" title="Mở danh mục">
         <i class="fa-solid fa-bars"></i>
