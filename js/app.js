@@ -63,10 +63,11 @@ function updateThemeBtnText(text, iconClass) {
 }
 
 // Google Form Auto-reporting Submitter
-function submitStudentNameToGoogleForm(fullName, className = '') {
+function submitStudentNameToGoogleForm(fullName) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdBYSjnvRG1YtyOUu8I6ONHzhPnWBcP_UNDvgfEEe6rY6uu-A/formResponse";
     const entryId = "entry.388968236";
-    const reportValue = className ? `${fullName} - Lớp: ${className}` : fullName;
+    const reportValue = (fullName || '').trim();
+    if (!reportValue) return;
     
     try {
         const iframe = document.createElement('iframe');
@@ -101,7 +102,7 @@ function submitStudentNameToGoogleForm(fullName, className = '') {
 function initProfile() {
     const nameEntryOverlay = document.getElementById('nameEntryOverlay');
     const studentNameInput = document.getElementById('studentNameInput');
-    const studentClassInput = document.getElementById('studentClassInput');
+    const inputBoxContainer = document.getElementById('inputBoxContainer');
     const nameInputError = document.getElementById('nameInputError');
     const startLearningBtn = document.getElementById('startLearningBtn');
     const sidebarProfileBox = document.getElementById('sidebarProfileBox');
@@ -111,7 +112,6 @@ function initProfile() {
 
     function checkStudentName() {
         const savedName = localStorage.getItem('toeic_student_name');
-        const savedClass = localStorage.getItem('toeic_student_class') || '';
         
         if (!savedName || savedName.trim() === '' || savedName === 'Học Viên') {
             if (nameEntryOverlay) {
@@ -124,37 +124,31 @@ function initProfile() {
             if (nameEntryOverlay) nameEntryOverlay.style.display = 'none';
             if (sidebarProfileBox) {
                 sidebarProfileBox.style.display = 'flex';
-                sidebarStudentName.textContent = savedClass ? `${savedName} (${savedClass})` : savedName;
+                sidebarStudentName.textContent = savedName;
                 profileAvatar.textContent = savedName.trim().charAt(0).toUpperCase();
             }
         }
     }
 
     if (startLearningBtn && studentNameInput) {
-        startLearningBtn.addEventListener('click', () => {
+        const handleStart = () => {
             const name = studentNameInput.value.trim();
-            const className = studentClassInput ? studentClassInput.value.trim() : '';
             
             if (!name) {
                 if (nameInputError) nameInputError.style.display = 'block';
-                studentNameInput.style.borderColor = '#ef4444';
+                if (inputBoxContainer) inputBoxContainer.style.borderColor = '#ef4444';
                 studentNameInput.focus();
                 return;
             }
 
             state.studentName = name;
             localStorage.setItem('toeic_student_name', name);
-            if (className) {
-                localStorage.setItem('toeic_student_class', className);
-            } else {
-                localStorage.removeItem('toeic_student_class');
-            }
 
             // Report to Miss Nguyet's Google Form
-            submitStudentNameToGoogleForm(name, className);
+            submitStudentNameToGoogleForm(name);
 
             if (nameInputError) nameInputError.style.display = 'none';
-            studentNameInput.style.borderColor = 'var(--border-color)';
+            if (inputBoxContainer) inputBoxContainer.style.borderColor = '#0284c7';
             
             if (nameEntryOverlay) {
                 nameEntryOverlay.style.opacity = '0';
@@ -165,38 +159,35 @@ function initProfile() {
 
             if (sidebarProfileBox) {
                 sidebarProfileBox.style.display = 'flex';
-                sidebarStudentName.textContent = className ? `${name} (${className})` : name;
+                sidebarStudentName.textContent = name;
                 profileAvatar.textContent = name.charAt(0).toUpperCase();
             }
 
-            showToast(`Chào mừng học viên ${name} đến với TOEIC WRITING!`, 'warning');
-        });
+            showToast(`Chào mừng ${name} đến với TOEIC WRITING!`, 'warning');
+        };
+
+        startLearningBtn.addEventListener('click', handleStart);
 
         studentNameInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                if (studentClassInput && !studentClassInput.value.trim()) {
-                    studentClassInput.focus();
-                } else {
-                    startLearningBtn.click();
-                }
+                handleStart();
             }
         });
 
-        if (studentClassInput) {
-            studentClassInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') startLearningBtn.click();
-            });
-        }
+        studentNameInput.addEventListener('input', () => {
+            if (studentNameInput.value.trim().length > 0) {
+                if (nameInputError) nameInputError.style.display = 'none';
+                if (inputBoxContainer) inputBoxContainer.style.borderColor = '#0284c7';
+            }
+        });
     }
 
     if (changeNameBtn) {
         changeNameBtn.addEventListener('click', () => {
             const currentName = localStorage.getItem('toeic_student_name') || '';
-            const currentClass = localStorage.getItem('toeic_student_class') || '';
             if (studentNameInput) studentNameInput.value = currentName === 'Học Viên' ? '' : currentName;
-            if (studentClassInput) studentClassInput.value = currentClass;
             if (nameInputError) nameInputError.style.display = 'none';
-            if (studentNameInput) studentNameInput.style.borderColor = 'var(--border-color)';
+            if (inputBoxContainer) inputBoxContainer.style.borderColor = '#0284c7';
             
             if (nameEntryOverlay) {
                 nameEntryOverlay.style.display = 'flex';
