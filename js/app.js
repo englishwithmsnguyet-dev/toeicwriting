@@ -109,7 +109,15 @@ function initNavigation() {
 
     // Sidebar items click
     document.querySelectorAll('.nav-item, .submenu-item').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            if (item.classList.contains('locked-item') || item.getAttribute('data-locked') === 'true') {
+                e.preventDefault();
+                e.stopPropagation();
+                const title = item.getAttribute('data-title') || 'Chuyên mục này';
+                showLockedAlert(title);
+                return;
+            }
+
             const navTarget = item.getAttribute('data-nav');
             const chapterId = item.getAttribute('data-chapter');
             const testId = item.getAttribute('data-test');
@@ -141,11 +149,51 @@ function initNavigation() {
     });
 }
 
+// Toast notification for locked sections
+function showLockedAlert(title = 'Chuyên mục này') {
+    showToast(`🔒 ${title} hiện đang tạm khoá. Hiện tại hệ thống chỉ mở học tập tại CHỦ ĐIỂM 01!`, 'warning');
+}
+
+function showToast(message, type = 'warning') {
+    let container = document.getElementById('appToastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'appToastContainer';
+        container.className = 'app-toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `app-toast ${type}`;
+    toast.innerHTML = `
+        <i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 1.15rem; flex-shrink: 0;"></i>
+        <div style="flex: 1; font-size: 0.95rem; line-height: 1.5; color: #fff;">${message}</div>
+    `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+    }, 3200);
+}
 
 // Main View Router
 function renderView(viewName, param = null) {
     const contentArea = document.getElementById('mainContentArea');
     if (!contentArea) return;
+
+    // Check if view is locked (only home, overview, and chapter 1 are open)
+    if (viewName === 'chapter' && param !== 1) {
+        showLockedAlert(`Chủ điểm 0${param}`);
+        return;
+    }
+    if (viewName === 'unscramble' || viewName === 'upgrader' || viewName === 'test') {
+        showLockedAlert(viewName === 'test' ? 'Phòng thi thực chiến' : 'Phần luyện tập tương tác');
+        return;
+    }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -189,17 +237,22 @@ function getHomeHTML() {
                     <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">06</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Trọng Tâm</div>
                 </div>
+            <div class="welcome-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 26px 0;">
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">100%</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chuẩn ETS & IIG Việt Nam</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">01</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">05</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Full Test 8:00 Phút</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">05</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu (S, V, O, C, M)</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-gold); font-family: var(--font-heading);">200</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Mục Tiêu Band Điểm</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">50</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Tranh Thực Hành Sắc Nét</div>
+                </div>
+                <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-gold); font-family: var(--font-heading);">150</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Câu Mẫu Chuẩn Score 3</div>
                 </div>
             </div>
             
@@ -207,11 +260,8 @@ function getHomeHTML() {
                 <button class="btn btn-primary" onclick="renderView('overview')" style="background: linear-gradient(135deg, var(--color-cyan), var(--color-purple)); color: white; border: none; padding: 13px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-landmark"></i> TỔNG QUAN IIG / ETS
                 </button>
-                <button class="btn btn-secondary" onclick="renderView('chapter', 1)" style="background: rgba(255, 255, 255, 0.06); color: var(--text-primary); border: 1px solid var(--border-color); padding: 13px 26px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-graduation-cap"></i> BẮT ĐẦU HỌC LÝ THUYẾT
-                </button>
-                <button class="btn btn-secondary" onclick="renderView('test', 1)" style="background: rgba(255, 255, 255, 0.06); color: var(--text-primary); border: 1px solid var(--border-color); padding: 13px 26px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-stopwatch"></i> PHÒNG THI THỰC CHIẾN
+                <button class="btn btn-secondary" onclick="renderView('chapter', 1)" style="background: rgba(0, 242, 254, 0.15); color: var(--color-cyan); border: 1px solid var(--color-cyan); padding: 13px 26px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);">
+                    <i class="fa-solid fa-graduation-cap"></i> BẮT ĐẦU HỌC CHỦ ĐIỂM 01
                 </button>
             </div>
         </div>
@@ -222,39 +272,57 @@ function getHomeHTML() {
 
         <div class="patterns-grid" style="grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px;">
             <div class="pattern-card highlight-card" onclick="renderView('overview')" style="cursor: pointer;">
-                <div class="pattern-num">TỔNG QUAN</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num">TỔNG QUAN</div>
+                    <span class="badge-tag" style="background: rgba(2, 132, 199, 0.15); color: #0284c7; font-weight: 800; font-size: 0.75rem;"><i class="fa-solid fa-circle-check"></i> ĐANG MỞ</span>
+                </div>
                 <div class="pattern-formula" style="font-size: 1.25rem;">Tổng Quan Bài Thi & Task 01</div>
                 <div class="pattern-desc">Cấu trúc bài thi TOEIC Writing, thang điểm 0-3 điểm/câu, tiêu chí giám khảo và ví dụ đề thi thực tế.</div>
             </div>
 
-            <div class="pattern-card" onclick="renderView('chapter', 1)" style="cursor: pointer;">
-                <div class="pattern-num">CHỦ ĐIỂM 01</div>
-                <div class="pattern-formula" style="font-size: 1.25rem;">Cấu Trúc Câu & 7 Mô Hình</div>
-                <div class="pattern-desc">Bản chất câu trần thuật mô tả tranh, cấu trúc S + V + O và 7 mô hình câu chuẩn trong tiếng Anh.</div>
+            <div class="pattern-card highlight-card" onclick="renderView('chapter', 1)" style="cursor: pointer; border-color: var(--color-cyan); box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num" style="color: var(--color-cyan);">CHỦ ĐIỂM 01</div>
+                    <span class="badge-tag" style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-weight: 800; font-size: 0.75rem;"><i class="fa-solid fa-circle-check"></i> ĐANG MỞ</span>
+                </div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--color-cyan);">Thành Phần Câu Cơ Bản</div>
+                <div class="pattern-desc">5 bài học chuyên sâu: Chủ ngữ (S), Động từ (V), Tân ngữ (O), Bổ ngữ (C), Trạng ngữ (M) kèm 50 tranh thực hành và 150 câu mẫu.</div>
             </div>
 
-            <div class="pattern-card" onclick="renderView('chapter', 3)" style="cursor: pointer;">
-                <div class="pattern-num">CHỦ ĐIỂM 03</div>
-                <div class="pattern-formula" style="font-size: 1.25rem;">5 Cấu Trúc Then Chốt</div>
-                <div class="pattern-desc">Hiện tại tiếp diễn, Bị động tiếp diễn, Bị động đơn, Cấu trúc trạng thái & Cấu trúc tồn tại There are.</div>
+            <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 02: Cấu trúc mô tả tranh cơ bản')" style="cursor: not-allowed;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num" style="color: var(--text-muted);">CHỦ ĐIỂM 02</div>
+                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                </div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">Cấu Trúc Mô Tả Tranh Cơ Bản</div>
+                <div class="pattern-desc" style="color: var(--text-muted);">Tranh tả người, Tranh tả vật & các cấu trúc chủ đạo (Nội dung đang hoàn thiện).</div>
             </div>
 
-            <div class="pattern-card" onclick="renderView('chapter', 4)" style="cursor: pointer;">
-                <div class="pattern-num">CHỦ ĐIỂM 04</div>
-                <div class="pattern-formula" style="font-size: 1.25rem;">Kỹ Thuật Nâng Cấp Band 3</div>
-                <div class="pattern-desc">Công thức cụ thể hóa Chủ ngữ (trang phục/vị trí), Hành động (công cụ) và Tân ngữ (chủng loại/số lượng).</div>
+            <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 03: Cấu trúc mô tả tranh nâng cao')" style="cursor: not-allowed;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num" style="color: var(--text-muted);">CHỦ ĐIỂM 03</div>
+                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                </div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">Cấu Trúc Mô Tả Tranh Nâng Cao</div>
+                <div class="pattern-desc" style="color: var(--text-muted);">Kỹ thuật nâng cấp Band 3, ghép câu phức & 5 cạm bẫy cấm kỵ (Nội dung đang hoàn thiện).</div>
             </div>
 
-            <div class="pattern-card" onclick="renderView('unscramble')" style="cursor: pointer;">
-                <div class="pattern-num">LUYỆN TẬP</div>
-                <div class="pattern-formula" style="font-size: 1.25rem;">Game Sắp Xếp Câu</div>
-                <div class="pattern-desc">Rèn luyện phản xạ ngữ pháp và trật tự từ chuẩn S - V - O qua các bài tập tương tác ghép từ.</div>
+            <div class="pattern-card locked-card" onclick="showLockedAlert('Game Sắp Xếp Câu (Unscramble)')" style="cursor: not-allowed;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num" style="color: var(--text-muted);">LUYỆN TẬP</div>
+                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                </div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">Game Sắp Xếp Câu & Nâng Cấp</div>
+                <div class="pattern-desc" style="color: var(--text-muted);">Rèn luyện phản xạ ngữ pháp và nâng cấp câu Band 3 (Nội dung đang hoàn thiện).</div>
             </div>
 
-            <div class="pattern-card highlight-card" onclick="renderView('test', 1)" style="cursor: pointer;">
-                <div class="pattern-num">THỰC CHIẾN</div>
-                <div class="pattern-formula" style="font-size: 1.25rem;">ETS Test 01 - 05 (8:00 Phút)</div>
-                <div class="pattern-desc">Phòng thi thực tế với đồng hồ bấm giờ 8 phút, chấm điểm tự động và câu mẫu 3 cấp độ Level 1, 2, 3.</div>
+            <div class="pattern-card locked-card" onclick="showLockedAlert('Phòng thi thực chiến')" style="cursor: not-allowed;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div class="pattern-num" style="color: var(--text-muted);">THỰC CHIẾN</div>
+                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                </div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">ETS Test 01 - 05 (8:00 Phút)</div>
+                <div class="pattern-desc" style="color: var(--text-muted);">Phòng thi thực tế với đồng hồ 8 phút và chấm điểm tự động (Nội dung đang hoàn thiện).</div>
             </div>
         </div>
     `;
