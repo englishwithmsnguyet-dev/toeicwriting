@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC Writing Task 01 - English with Miss Nguyet</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Canvas for Confetti celebrations -->
+    <canvas id="confettiCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10000;"></canvas>
+
+    <!-- Glowing Background Blobs -->
+    <div class="bg-blobs-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: -1; pointer-events: none;">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Mobile Navigation Toggle Button -->
+    <button class="menu-toggle-btn" id="menuToggleBtn" title="Mở danh mục">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">W</div>
+                    <span>TOEIC Writing</span>
+                </div>
+                <button class="toggle-sidebar-btn" id="toggleSidebarBtn" title="Thu gọn danh mục">
+                    <i class="fa-solid fa-angles-left" id="toggleIcon"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-profile" id="sidebarProfileBox" style="padding: 12px 20px; border-bottom: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.01); display: flex; align-items: center; gap: 12px;">
+                <div class="profile-avatar" id="profileAvatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--color-purple), var(--color-pink)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; flex-shrink: 0;">H</div>
+                <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1;">
+                    <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.2;">Học viên</span>
+                    <span id="sidebarStudentName" style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; line-height: 1.3;">Học Viên</span>
+                </div>
+                <button id="changeNameBtn" title="Đổi tên học viên" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 6px; transition: all 0.2s; flex-shrink: 0;"><i class="fa-solid fa-user-pen"></i></button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item active" id="navHomeBtn" data-nav="home">
+                    <span class="nav-item-icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="nav-item-text">Trang chủ</span>
+                </div>
+                
+                <!-- Bật/Tắt Đèn (Light/Dark Mode Theme Toggle) -->
+                <div class="nav-item" id="themeToggleBtn">
+                    <span class="nav-item-icon"><i class="fa-solid fa-moon" id="themeIcon"></i></span>
+                    <span class="nav-item-text" id="themeText">Tắt đèn</span>
+                </div>
+                
+                <div class="sidebar-nav-section-title">Tổng quan</div>
+                <div class="sidebar-submenu">
+                    <div class="submenu-item" data-nav="overview"><i class="fa-solid fa-landmark"></i> Tổng quan</div>
+                </div>
+
+                <div class="sidebar-nav-section-title">Phần 01: Trọng tâm kiến thức</div>
+                <div class="sidebar-submenu" id="grammarSubmenu">
+                    <div class="submenu-item" data-chapter="1">
+                        <i class="fa-solid fa-cube"></i> Chủ điểm 01: Thành phần câu cơ bản
+                    </div>
+                    <div class="submenu-item" data-chapter="2">
+                        <i class="fa-solid fa-layer-group"></i> Chủ điểm 02: Cấu trúc mô tả tranh cơ bản
+                    </div>
+                    <div class="submenu-item" data-chapter="3">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Chủ điểm 03: Cấu trúc mô tả tranh nâng cao
+                    </div>
+                </div>
+
+                <div class="sidebar-nav-section-title">Phần 02: Luyện tập tương tác</div>
+                <div class="sidebar-submenu">
+                    <div class="submenu-item" data-nav="unscramble"><i class="fa-solid fa-arrows-split-up-and-left"></i> Sắp xếp câu (Unscramble)</div>
+                    <div class="submenu-item" data-nav="upgrader"><i class="fa-solid fa-wand-magic-sparkles"></i> Thử thách nâng cấp Band 3</div>
+                </div>
+
+                <div class="sidebar-nav-section-title">Phần 03: Phòng thi thực chiến</div>
+                <div class="sidebar-submenu">
+                    <div class="submenu-item test-item" data-test="1"><i class="fa-solid fa-file-signature"></i> ETS 2026 - Test 01</div>
+                    <div class="submenu-item test-item" data-test="2"><i class="fa-solid fa-file-signature"></i> ETS 2026 - Test 02</div>
+                    <div class="submenu-item test-item" data-test="3"><i class="fa-solid fa-file-signature"></i> ETS 2026 - Test 03</div>
+                    <div class="submenu-item test-item" data-test="4"><i class="fa-solid fa-file-signature"></i> ETS 2026 - Test 04</div>
+                    <div class="submenu-item test-item" data-test="5"><i class="fa-solid fa-file-signature"></i> ETS 2026 - Test 05</div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar with brand header -->
+            <header class="top-navbar">
+                <a href="https://www.facebook.com/nguyetpham28" target="_blank" class="galaxy-brand" title="Ghé thăm Facebook của tôi!">
+                    ENGLISH WITH MISS NGUYET
+                </a>
+            </header>
+
+            <!-- Dynamic Content Area wrapper -->
+            <div class="content-wrapper" id="mainContentArea">
+                <!-- Injected via JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Data & Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
