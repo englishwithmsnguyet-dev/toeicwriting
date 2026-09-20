@@ -364,15 +364,15 @@ function getHomeHTML() {
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">05</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu (S, V, O, C, M)</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">07</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">50</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">70</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Tranh Thực Hành Sắc Nét</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-gold); font-family: var(--font-heading);">150</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-gold); font-family: var(--font-heading);">210</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Câu Mẫu Chuẩn Score 3</div>
                 </div>
             </div>
@@ -416,7 +416,7 @@ function getHomeHTML() {
                     <span class="badge-tag" style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-weight: 800; font-size: 0.75rem;"><i class="fa-solid fa-circle-check"></i> ĐANG MỞ</span>
                 </div>
                 <div class="pattern-formula" style="font-size: 1.25rem; color: var(--color-purple);">Cấu Trúc Mô Tả Tranh Cơ Bản</div>
-                <div class="pattern-desc">Tranh tả người (70% đề thi), Tranh tả vật & khung cảnh với 7 cấu trúc chủ đạo đạt chuẩn ETS.</div>
+                <div class="pattern-desc">14 cấu trúc cốt lõi (7 cấu trúc tả người, 7 cấu trúc tả vật) kèm 20 tranh thực hành chuẩn đề thi ETS và 60 câu mẫu có từ khóa.</div>
             </div>
 
             <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 03: Cấu trúc mô tả tranh nâng cao')" style="cursor: not-allowed;">
