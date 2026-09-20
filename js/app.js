@@ -272,7 +272,7 @@ function initNavigation() {
 
 // Toast notification for locked sections
 function showLockedAlert(title = 'Chuyên mục này') {
-    showToast(`🔒 ${title} hiện đang tạm khoá. Hiện tại hệ thống chỉ mở học tập tại CHỦ ĐIỂM 01!`, 'warning');
+    showToast(`🔒 ${title} hiện đang tạm khoá. Hiện tại hệ thống mở học tập tại CHỦ ĐIỂM 01 & 02!`, 'warning');
 }
 
 function showToast(message, type = 'warning') {
@@ -306,8 +306,8 @@ function renderView(viewName, param = null) {
     const contentArea = document.getElementById('mainContentArea');
     if (!contentArea) return;
 
-    // Check if view is locked (only home, overview, and chapter 1 are open)
-    if (viewName === 'chapter' && param !== 1) {
+    // Check if view is locked (home, overview, chapter 1 & chapter 2 are open)
+    if (viewName === 'chapter' && param !== 1 && param !== 2) {
         showLockedAlert(`Chủ điểm 0${param}`);
         return;
     }
@@ -360,7 +360,7 @@ function getHomeHTML() {
                 </div>
             <div class="welcome-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 26px 0;">
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">01</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">02</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
@@ -410,13 +410,13 @@ function getHomeHTML() {
                 <div class="pattern-desc">5 bài học chuyên sâu: Chủ ngữ (S), Động từ (V), Tân ngữ (O), Bổ ngữ (C), Trạng ngữ (M) kèm 50 tranh thực hành và 150 câu mẫu.</div>
             </div>
 
-            <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 02: Cấu trúc mô tả tranh cơ bản')" style="cursor: not-allowed;">
+            <div class="pattern-card highlight-card" onclick="renderView('chapter', 2)" style="cursor: pointer; border-color: var(--color-purple); box-shadow: 0 0 25px rgba(123, 97, 255, 0.12);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div class="pattern-num" style="color: var(--text-muted);">CHỦ ĐIỂM 02</div>
-                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                    <div class="pattern-num" style="color: var(--color-purple);">CHỦ ĐIỂM 02</div>
+                    <span class="badge-tag" style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-weight: 800; font-size: 0.75rem;"><i class="fa-solid fa-circle-check"></i> ĐANG MỞ</span>
                 </div>
-                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">Cấu Trúc Mô Tả Tranh Cơ Bản</div>
-                <div class="pattern-desc" style="color: var(--text-muted);">Tranh tả người, Tranh tả vật & các cấu trúc chủ đạo (Nội dung đang hoàn thiện).</div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--color-purple);">Cấu Trúc Mô Tả Tranh Cơ Bản</div>
+                <div class="pattern-desc">Tranh tả người (70% đề thi), Tranh tả vật & khung cảnh với 7 cấu trúc chủ đạo đạt chuẩn ETS.</div>
             </div>
 
             <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 03: Cấu trúc mô tả tranh nâng cao')" style="cursor: not-allowed;">
