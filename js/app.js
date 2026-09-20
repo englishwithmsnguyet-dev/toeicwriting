@@ -717,6 +717,76 @@ window.switchStructure = function(lessonId, targetIndex) {
     }
 };
 
+window.checkPracticeSentence = function(lessonId, qIdx, k1, k2) {
+    const input = document.getElementById(`prac-input-${lessonId}-${qIdx}`);
+    const resultBox = document.getElementById(`prac-result-${lessonId}-${qIdx}`);
+    const scoreBadge = document.getElementById(`prac-score-${lessonId}-${qIdx}`);
+    const msgBox = document.getElementById(`prac-msg-${lessonId}-${qIdx}`);
+    const modelsBox = document.getElementById(`prac-models-${lessonId}-${qIdx}`);
+    if (!input || !resultBox) return;
+
+    const userText = input.value.trim();
+    if (!userText) {
+        alert("Vui lòng nhập câu của bạn trước khi kiểm tra!");
+        input.focus();
+        return;
+    }
+
+    const res = evaluateSingleSentence(userText, { keywords: [k1, k2] });
+    
+    // Set score badge
+    if (scoreBadge) {
+        scoreBadge.className = `badge-tag score-badge score-${res.score}`;
+        scoreBadge.innerHTML = `<i class="fa-solid fa-star"></i> Score: ${res.score} / 3 Điểm`;
+        if (res.score === 3) {
+            scoreBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+            scoreBadge.style.color = '#10b981';
+            scoreBadge.style.borderColor = '#10b981';
+        } else if (res.score === 2) {
+            scoreBadge.style.background = 'rgba(2, 132, 199, 0.2)';
+            scoreBadge.style.color = '#0284c7';
+            scoreBadge.style.borderColor = '#0284c7';
+        } else if (res.score === 1) {
+            scoreBadge.style.background = 'rgba(245, 158, 11, 0.2)';
+            scoreBadge.style.color = '#d97706';
+            scoreBadge.style.borderColor = '#d97706';
+        } else {
+            scoreBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+            scoreBadge.style.color = '#ef4444';
+            scoreBadge.style.borderColor = '#ef4444';
+        }
+    }
+
+    if (msgBox) {
+        msgBox.innerHTML = res.feedback;
+    }
+
+    // Reveal result box & models
+    resultBox.style.display = 'block';
+    if (modelsBox) modelsBox.style.display = 'block';
+
+    if (res.score === 3) {
+        triggerConfetti();
+    }
+};
+
+window.togglePracticeAnswer = function(lessonId, qIdx) {
+    const modelsBox = document.getElementById(`prac-models-${lessonId}-${qIdx}`);
+    const resultBox = document.getElementById(`prac-result-${lessonId}-${qIdx}`);
+    const btn = document.getElementById(`prac-toggle-btn-${lessonId}-${qIdx}`);
+    if (!modelsBox || !resultBox) return;
+
+    if (resultBox.style.display === 'none' || !resultBox.style.display) {
+        resultBox.style.display = 'block';
+        modelsBox.style.display = 'block';
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Ẩn câu mẫu & Từ vựng';
+    } else {
+        resultBox.style.display = 'none';
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-eye"></i> Xem câu mẫu & Từ vựng';
+    }
+};
+
+
 
 // ==========================================
 // 4. UNSCRAMBLE GAME ENGINE
