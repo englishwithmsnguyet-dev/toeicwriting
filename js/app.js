@@ -369,7 +369,7 @@ function getHomeHTML() {
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
                     <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">70</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Tranh Thực Hành Sắc Nét</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Tranh Ví Dụ Minh Họa</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
                     <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-gold); font-family: var(--font-heading);">210</div>
