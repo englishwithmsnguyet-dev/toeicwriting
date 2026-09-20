@@ -662,6 +662,62 @@ window.switchSubSection = function(lessonId, key) {
     }
 };
 
+window.switchStructure = function(lessonId, targetIndex) {
+    const container = document.getElementById(`struct-viewer-${lessonId}`);
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.structure-card-pane');
+    const tabs = container.querySelectorAll('.struct-pill-btn');
+    const total = cards.length;
+    if (total === 0) return;
+
+    let idx = parseInt(targetIndex, 10);
+    if (isNaN(idx)) idx = 0;
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+
+    // Update pill buttons
+    tabs.forEach((tab, i) => {
+        if (i === idx) {
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+        } else {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+        }
+    });
+
+    // Update structure cards (only ONE active at a time)
+    cards.forEach((card, i) => {
+        if (i === idx) {
+            card.classList.add('active');
+            card.style.display = 'block';
+        } else {
+            card.classList.remove('active');
+            card.style.display = 'none';
+        }
+    });
+
+    // Update counter
+    const counter = container.querySelector('.struct-step-indicator');
+    if (counter) {
+        counter.textContent = `Cấu trúc ${idx + 1} / ${total}`;
+    }
+
+    // Update prev / next buttons
+    const prevBtn = container.querySelector('.struct-btn-prev');
+    const nextBtn = container.querySelector('.struct-btn-next');
+    if (prevBtn) {
+        prevBtn.disabled = (idx === 0);
+        prevBtn.setAttribute('onclick', `switchStructure('${lessonId}', ${idx - 1})`);
+    }
+    if (nextBtn) {
+        nextBtn.disabled = (idx === total - 1);
+        nextBtn.setAttribute('onclick', `switchStructure('${lessonId}', ${idx + 1})`);
+    }
+};
+
+
 // ==========================================
 // 4. UNSCRAMBLE GAME ENGINE
 // ==========================================
