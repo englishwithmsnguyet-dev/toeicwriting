@@ -307,7 +307,7 @@ function renderView(viewName, param = null) {
     if (!contentArea) return;
 
     // Check if view is locked (home, overview, chapter 1 & chapter 2 are open)
-    if (viewName === 'chapter' && param !== 1 && param !== 2) {
+    if (viewName === 'chapter' && param !== 1 && param !== 2 && param !== 3) {
         showLockedAlert(`Chủ điểm 0${param}`);
         return;
     }
@@ -360,11 +360,11 @@ function getHomeHTML() {
                 </div>
             <div class="welcome-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 26px 0;">
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">02</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">03</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">07</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">10</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
@@ -419,13 +419,13 @@ function getHomeHTML() {
                 <div class="pattern-desc">14 cấu trúc cốt lõi (7 cấu trúc tả người, 7 cấu trúc tả vật) kèm 20 tranh thực hành chuẩn đề thi ETS và 60 câu mẫu có từ khóa.</div>
             </div>
 
-            <div class="pattern-card locked-card" onclick="showLockedAlert('Chủ điểm 03: Cấu trúc mô tả tranh nâng cao')" style="cursor: not-allowed;">
+            <div class="pattern-card highlight-card" onclick="renderView('chapter', 3)" style="cursor: pointer; border-color: var(--color-gold); box-shadow: 0 0 25px rgba(245, 158, 11, 0.12);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div class="pattern-num" style="color: var(--text-muted);">CHỦ ĐIỂM 03</div>
-                    <span class="badge-tag" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: 700; font-size: 0.75rem;"><i class="fa-solid fa-lock"></i> TẠM KHOÁ</span>
+                    <div class="pattern-num" style="color: var(--color-gold);">CHỦ ĐIỂM 03</div>
+                    <span class="badge-tag" style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-weight: 800; font-size: 0.75rem;"><i class="fa-solid fa-circle-check"></i> ĐANG MỞ</span>
                 </div>
-                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--text-muted);">Cấu Trúc Mô Tả Tranh Nâng Cao</div>
-                <div class="pattern-desc" style="color: var(--text-muted);">Kỹ thuật nâng cấp Band 3, ghép câu phức & 5 cạm bẫy cấm kỵ (Nội dung đang hoàn thiện).</div>
+                <div class="pattern-formula" style="font-size: 1.25rem; color: var(--color-gold);">Cấu Trúc Mô Tả Tranh Nâng Cao</div>
+                <div class="pattern-desc">Kỹ thuật nâng cấp S-V-O, danh từ & trạng thái vật, cấu trúc câu phức với liên từ và 5 bẫy trừ điểm cấm kỵ của ETS.</div>
             </div>
 
             <div class="pattern-card locked-card" onclick="showLockedAlert('Game Sắp Xếp Câu (Unscramble)')" style="cursor: not-allowed;">
