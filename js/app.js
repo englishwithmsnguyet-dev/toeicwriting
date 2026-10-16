@@ -515,6 +515,7 @@ const COMPONENT_TABS_META = {
     "3-1": { title: "NÂNG CẤP S - V - O", subtitle: "(LEVEL 8 - 9)", icon: "fa-solid fa-rocket", theme: "tab-theme-subject" },
     "3-2": { title: "CÂU PHỨC LIÊN TỪ", subtitle: "(WHEN / BECAUSE)", icon: "fa-solid fa-diagram-project", theme: "tab-theme-verb" },
     "3-3": { title: "CHECKLIST BẪY ETS", subtitle: "(DOS & DON'TS)", icon: "fa-solid fa-shield-halved", theme: "tab-theme-modifier" },
+    "3-4": { title: "BÀI TẬP ÁP DỤNG", subtitle: "(10 CÂU NÂNG CAO)", icon: "fa-solid fa-pen-to-square", theme: "tab-theme-gold" },
 
     // PART 02 - Chủ điểm 01: Tổng quan, Tiêu chí & Header
     "4-1": { title: "TIÊU CHÍ CHẤM THI", subtitle: "(SCORING CRITERIA)", icon: "fa-solid fa-award", theme: "tab-theme-subject" },
@@ -533,8 +534,10 @@ const COMPONENT_TABS_META = {
 };
 
 function getChapterHTML(chapter) {
-    const isFiveItems = chapter.lessons.length === 5;
-    const gridClass = isFiveItems ? 'component-tabs-grid component-tabs-grid-5' : 'component-tabs-grid';
+    const count = chapter.lessons.length;
+    let gridClass = 'component-tabs-grid';
+    if (count === 5) gridClass += ' component-tabs-grid-5';
+    else if (count === 4) gridClass += ' component-tabs-grid-4';
 
     let tabsHTML = `
         <div class="${gridClass}">

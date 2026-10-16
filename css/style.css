@@ -621,11 +621,17 @@ body.light-theme .pattern-card {
     .component-tabs-grid-5 {
         grid-template-columns: repeat(5, 1fr);
     }
+    .component-tabs-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media (max-width: 991px) and (min-width: 640px) {
     .component-tabs-grid-5 {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .component-tabs-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
