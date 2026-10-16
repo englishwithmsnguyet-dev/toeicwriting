@@ -368,7 +368,7 @@ function getHomeHTML() {
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Trọng Tâm</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">17</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">18</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu Đang Mở</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
@@ -515,7 +515,8 @@ const COMPONENT_TABS_META = {
     "3-1": { title: "NÂNG CẤP S - V - O", subtitle: "(LEVEL 8 - 9)", icon: "fa-solid fa-rocket", theme: "tab-theme-subject" },
     "3-2": { title: "CÂU PHỨC LIÊN TỪ", subtitle: "(WHEN / BECAUSE)", icon: "fa-solid fa-diagram-project", theme: "tab-theme-verb" },
     "3-3": { title: "CHECKLIST BẪY ETS", subtitle: "(DOS & DON'TS)", icon: "fa-solid fa-shield-halved", theme: "tab-theme-modifier" },
-    "3-4": { title: "BÀI TẬP ÁP DỤNG", subtitle: "(10 CÂU NÂNG CAO)", icon: "fa-solid fa-pen-to-square", theme: "tab-theme-gold" },
+    "3-4": { title: "BÀI LUYỆN TẬP", subtitle: "(10 CÂU TẠI LỚP)", icon: "fa-solid fa-pen-to-square", theme: "tab-theme-object" },
+    "3-5": { title: "BÀI TẬP VỀ NHÀ", subtitle: "(10 CÂU ETS PREPEDU)", icon: "fa-solid fa-house-laptop", theme: "tab-theme-gold" },
 
     // PART 02 - Chủ điểm 01: Tổng quan, Tiêu chí & Header
     "4-1": { title: "TIÊU CHÍ CHẤM THI", subtitle: "(SCORING CRITERIA)", icon: "fa-solid fa-award", theme: "tab-theme-subject" },
@@ -1350,7 +1351,11 @@ function checkKeywordFlexible(text, keyword) {
         'carry': ['carried', 'carrying', 'carries'],
         'scan': ['scanned', 'scanning', 'scans'],
         'stack': ['stacked', 'stacking', 'stacks'],
-        'box': ['boxes']
+        'box': ['boxes'],
+        'child': ['children'],
+        'shelf': ['shelves'],
+        'hang': ['hung', 'hanging', 'hangs'],
+        'shoes': ['shoe']
     };
 
     if (irregulars[keyword]) {
