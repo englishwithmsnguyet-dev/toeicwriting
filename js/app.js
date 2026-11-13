@@ -364,12 +364,12 @@ function getHomeHTML() {
             
             <div class="welcome-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 26px 0;">
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">06</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-cyan); font-family: var(--font-heading);">07</div>
                     <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Chủ Điểm Trọng Tâm</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
-                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">18</div>
-                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Bài Học Chuyên Sâu Đang Mở</div>
+                    <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-purple); font-family: var(--font-heading);">22</div>
+                    <div class="stat-label" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">Đề Thi Thực Chiến Part 02</div>
                 </div>
                 <div class="stat-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; text-align: center;">
                     <div class="stat-value" style="font-size: 2.2rem; font-weight: 800; color: var(--color-success); font-family: var(--font-heading);">75+</div>
@@ -390,6 +390,9 @@ function getHomeHTML() {
                 </button>
                 <button class="btn btn-secondary" onclick="renderView('chapter', 4)" style="background: rgba(245, 158, 11, 0.15); color: var(--color-gold); border: 1px solid var(--color-gold); padding: 13px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-envelope-open-text"></i> HỌC PART 02 (EMAIL)
+                </button>
+                <button class="btn btn-secondary" onclick="renderView('chapter', 7)" style="background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid #a855f7; padding: 13px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-laptop-code"></i> 22 ĐỀ THI PART 02 THỰC CHIẾN
                 </button>
             </div>
         </div>
@@ -532,7 +535,13 @@ const COMPONENT_TABS_META = {
     "6-1": { title: "KHUNG 5 PHẦN EMAIL", subtitle: "(EMAIL FRAMEWORK)", icon: "fa-solid fa-envelope-open-text", theme: "tab-theme-subject" },
     "6-2": { title: "FORMAL VS. LESS FORMAL", subtitle: "(PHONG CÁCH SONG SONG)", icon: "fa-solid fa-scale-balanced", theme: "tab-theme-verb" },
     "6-3": { title: "BÀI MẪU & CASE STUDY", subtitle: "(4 SAMPLE RESPONSES)", icon: "fa-solid fa-file-signature", theme: "tab-theme-gold" },
-    "6-4": { title: "LUYỆN VIẾT THỰC CHIẾN", subtitle: "(EMAIL WRITING LAB)", icon: "fa-solid fa-laptop-code", theme: "tab-theme-gold" }
+    "6-4": { title: "LUYỆN VIẾT THỰC CHIẾN", subtitle: "(EMAIL WRITING LAB)", icon: "fa-solid fa-laptop-code", theme: "tab-theme-gold" },
+
+    // PART 02 - Chủ điểm 04: Ngân hàng 22 Đề thi Thực chiến
+    "7-1": { title: "CUSTOMER & TECH", subtitle: "(6 ĐỀ HỖ TRỢ KỸ THUẬT)", icon: "fa-solid fa-headset", theme: "tab-theme-subject" },
+    "7-2": { title: "WORKPLACE & HR", subtitle: "(6 ĐỀ NỘI BỘ DOANH NGHIỆP)", icon: "fa-solid fa-briefcase", theme: "tab-theme-verb" },
+    "7-3": { title: "FACILITIES & FEEDBACK", subtitle: "(5 ĐỀ KHẢO SÁT & ĐỊA ĐIỂM)", icon: "fa-solid fa-comments", theme: "tab-theme-modifier" },
+    "7-4": { title: "HOSPITALITY & SERVICES", subtitle: "(5 ĐỀ KHÁCH SẠN & DỊCH VỤ)", icon: "fa-solid fa-hotel", theme: "tab-theme-gold" }
 };
 
 function getChapterHTML(chapter) {
@@ -1560,5 +1569,27 @@ window.checkEmailLab = function(labId, expectedElements) {
 
     if (score >= 4 && hasSalutation && hasSignOff && typeof triggerConfetti === 'function') {
         triggerConfetti();
+    }
+};
+
+
+window.toggleExamScreenshot = function(id) {
+    const el = document.getElementById();
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+};
+
+window.toggleExamOutline = function(id) {
+    const el = document.getElementById();
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+};
+
+window.toggleExamModel = function(id) {
+    const el = document.getElementById();
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    if (el.style.display === 'block') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 };
