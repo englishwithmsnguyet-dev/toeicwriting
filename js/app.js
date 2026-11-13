@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initProfile();
     initNavigation();
+    if (window.ProgressManager) {
+        window.ProgressManager.init();
+    }
     renderView('home');
 });
 
@@ -143,6 +146,10 @@ function initProfile() {
 
             state.studentName = name;
             localStorage.setItem('toeic_student_name', name);
+            if (window.ProgressManager) {
+                window.ProgressManager.data.studentName = name;
+                window.ProgressManager.save(true);
+            }
 
             // Report to Miss Nguyet's Google Form
             submitStudentNameToGoogleForm(name);
@@ -163,7 +170,7 @@ function initProfile() {
                 profileAvatar.textContent = name.charAt(0).toUpperCase();
             }
 
-            showToast(`Chào mừng ${name} đến với TOEIC WRITING!`, 'warning');
+            showToast(`Chào mừng ${name} đến với TOEIC WRITING!`, 'success');
         };
 
         startLearningBtn.addEventListener('click', handleStart);
@@ -284,10 +291,19 @@ function showToast(message, type = 'warning') {
         document.body.appendChild(container);
     }
 
+    let iconHtml = '<i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b; font-size: 1.15rem; flex-shrink: 0;"></i>';
+    if (type === 'success') {
+        iconHtml = '<i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.15rem; flex-shrink: 0;"></i>';
+    } else if (type === 'lock' || message.includes('🔒')) {
+        iconHtml = '<i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 1.15rem; flex-shrink: 0;"></i>';
+    } else if (type === 'info') {
+        iconHtml = '<i class="fa-solid fa-circle-info" style="color: #00f2fe; font-size: 1.15rem; flex-shrink: 0;"></i>';
+    }
+
     const toast = document.createElement('div');
     toast.className = `app-toast ${type}`;
     toast.innerHTML = `
-        <i class="fa-solid fa-lock" style="color: #f59e0b; font-size: 1.15rem; flex-shrink: 0;"></i>
+        ${iconHtml}
         <div style="flex: 1; font-size: 0.95rem; line-height: 1.5; color: #fff;">${message}</div>
     `;
 
@@ -307,7 +323,7 @@ function renderView(viewName, param = null) {
     if (!contentArea) return;
 
     // Check if view is valid
-    if (viewName === 'chapter' && ![1, 2, 3, 4, 5, 6].includes(param)) {
+    if (viewName === 'chapter' && ![1, 2, 3, 4, 5, 6, 7].includes(param)) {
         showLockedAlert(`Chủ điểm 0${param}`);
         return;
     }
@@ -344,6 +360,11 @@ function renderView(viewName, param = null) {
         const test = ETS_MOCK_TESTS.find(t => t.testId === param) || ETS_MOCK_TESTS[0];
         contentArea.innerHTML = getTestSimulatorHTML(test);
         initTestSimulator(test);
+    }
+
+    // Auto-restore any saved drafts into visible textareas
+    if (window.ProgressManager) {
+        window.ProgressManager.restoreAllVisibleInputs();
     }
 }
 
@@ -527,9 +548,11 @@ const COMPONENT_TABS_META = {
     "4-3": { title: "KỸ THUẬT ĐỌC HEADER", subtitle: "(HEADER BREAKDOWN)", icon: "fa-solid fa-magnifying-glass", theme: "tab-theme-modifier" },
 
     // PART 02 - Chủ điểm 02: 5 Dạng yêu cầu cốt lõi
-    "5-1": { title: "QUESTIONS & REQUESTS", subtitle: "(ĐẶT CÂU HỎI & YÊU CẦU)", icon: "fa-solid fa-circle-question", theme: "tab-theme-subject" },
-    "5-2": { title: "GIVE INFORMATION", subtitle: "(CUNG CẤP THÔNG TIN)", icon: "fa-solid fa-circle-info", theme: "tab-theme-object" },
-    "5-3": { title: "PROBLEMS & SUGGESTIONS", subtitle: "(SỰ CỐ & ĐỀ XUẤT)", icon: "fa-solid fa-lightbulb", theme: "tab-theme-modifier" },
+    "5-1": { title: "ASK QUESTIONS", subtitle: "(1. ĐẶT CÂU HỎI)", icon: "fa-solid fa-circle-question", theme: "tab-theme-subject" },
+    "5-2": { title: "MAKE REQUESTS", subtitle: "(2. ĐƯA YÊU CẦU)", icon: "fa-solid fa-hand-holding-hand", theme: "tab-theme-verb" },
+    "5-3": { title: "GIVE INFORMATION", subtitle: "(3. CUNG CẤP THÔNG TIN)", icon: "fa-solid fa-circle-info", theme: "tab-theme-object" },
+    "5-4": { title: "EXPLAIN PROBLEMS", subtitle: "(4. SỰ CỐ & KHIẾU NẠI)", icon: "fa-solid fa-triangle-exclamation", theme: "tab-theme-modifier" },
+    "5-5": { title: "MAKE SUGGESTIONS", subtitle: "(5. ĐƯA ĐỀ XUẤT)", icon: "fa-solid fa-lightbulb", theme: "tab-theme-gold" },
 
     // PART 02 - Chủ điểm 03: Khung Email chuẩn & Bài mẫu
     "6-1": { title: "KHUNG 5 PHẦN EMAIL", subtitle: "(EMAIL FRAMEWORK)", icon: "fa-solid fa-envelope-open-text", theme: "tab-theme-subject" },
@@ -685,6 +708,10 @@ window.switchLesson = function(lessonId) {
             targetPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
     }
+
+    if (window.ProgressManager) {
+        window.ProgressManager.restoreAllVisibleInputs();
+    }
 };
 
 window.switchSubSection = function(lessonId, key) {
@@ -709,6 +736,10 @@ window.switchSubSection = function(lessonId, key) {
         if (targetSubpane) {
             targetSubpane.classList.add('active');
         }
+    }
+
+    if (window.ProgressManager) {
+        window.ProgressManager.restoreAllVisibleInputs();
     }
 };
 
@@ -817,6 +848,14 @@ window.checkPracticeSentence = function(lessonId, qIdx, k1, k2) {
 
     if (res.score === 3) {
         triggerConfetti();
+    }
+
+    if (window.ProgressManager) {
+        window.ProgressManager.saveScore('part1Exercises', `${lessonId}-${qIdx}`, {
+            score: res.score,
+            feedback: res.feedback,
+            date: new Date().toISOString()
+        });
     }
 };
 
@@ -1117,7 +1156,14 @@ function initTestSimulator(test) {
     state.exam.active = true;
     state.exam.testId = test.testId;
     state.exam.currentQuestionIndex = 0;
-    state.exam.answers = ["", "", "", "", ""];
+
+    // Restore saved exam answers if available
+    const savedExam = window.ProgressManager ? ProgressManager.getExamDraft(test.testId) : null;
+    if (savedExam && Array.isArray(savedExam) && savedExam.length === 5) {
+        state.exam.answers = [...savedExam];
+    } else {
+        state.exam.answers = ["", "", "", "", ""];
+    }
     state.exam.timeLeft = 480;
 
     if (state.exam.timerInterval) clearInterval(state.exam.timerInterval);
@@ -1143,6 +1189,9 @@ function initTestSimulator(test) {
         state.exam.answers[state.exam.currentQuestionIndex] = e.target.value;
         updateCharCount(e.target.value);
         updateQuestionTabsStatus(test);
+        if (window.ProgressManager) {
+            window.ProgressManager.saveExamDraft(test.testId, state.exam.answers);
+        }
     });
 
     document.querySelectorAll('.ets-tab-btn').forEach(btn => {
@@ -1212,6 +1261,7 @@ function loadQuestionView(test, qIdx) {
         if (idx === qIdx) btn.classList.add('active');
         else btn.classList.remove('active');
     });
+    updateQuestionTabsStatus(test);
 
     // Update buttons
     const prevBtn = document.getElementById('etsPrevBtn');
@@ -1300,6 +1350,13 @@ function gradeAndShowResults(test) {
 
     if (totalScore >= 12) {
         triggerConfetti();
+    }
+
+    if (window.ProgressManager) {
+        window.ProgressManager.saveScore('part1Exams', test.testId, {
+            score: totalScore,
+            date: new Date().toISOString()
+        });
     }
 }
 
@@ -1570,26 +1627,592 @@ window.checkEmailLab = function(labId, expectedElements) {
     if (score >= 4 && hasSalutation && hasSignOff && typeof triggerConfetti === 'function') {
         triggerConfetti();
     }
+
+    if (window.ProgressManager) {
+        window.ProgressManager.saveScore('part2Emails', labId, {
+            score: score,
+            words: words,
+            date: new Date().toISOString()
+        });
+    }
 };
 
-
 window.toggleExamScreenshot = function(id) {
-    const el = document.getElementById();
+    const el = document.getElementById(`exam-screenshot-${id}`);
     if (!el) return;
     el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 };
 
 window.toggleExamOutline = function(id) {
-    const el = document.getElementById();
+    const el = document.getElementById(`exam-outline-${id}`);
     if (!el) return;
     el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 };
 
 window.toggleExamModel = function(id) {
-    const el = document.getElementById();
+    const el = document.getElementById(`exam-model-${id}`);
     if (!el) return;
     el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
     if (el.style.display === 'block') {
         el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+};
+
+// ============================================================================
+// PROGRESS MANAGER & AUTO-SAVE ENGINE FOR TOEIC WRITING
+// ============================================================================
+const ProgressManager = {
+    STORAGE_KEY: 'toeic_writing_progress',
+    data: {
+        system: "TOEIC_WRITING_MASTERCLASS",
+        version: "2026.1",
+        studentName: "Học Viên",
+        lastSaved: new Date().toISOString(),
+        lastSavedFormatted: "Vừa xong",
+        drafts: {
+            part1Exercises: {},
+            part2Emails: {},
+            part1Exams: {}
+        },
+        scores: {
+            part1Exercises: {},
+            part2Emails: {},
+            part1Exams: {}
+        }
+    },
+    saveTimeout: null,
+
+    init() {
+        this.load();
+        this.attachGlobalInputListener();
+        this.restoreAllVisibleInputs();
+        this.updateUI();
+    },
+
+    load() {
+        try {
+            const raw = localStorage.getItem(this.STORAGE_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') {
+                    this.data = {
+                        system: parsed.system || "TOEIC_WRITING_MASTERCLASS",
+                        version: parsed.version || "2026.1",
+                        studentName: parsed.studentName || state.studentName || "Học Viên",
+                        lastSaved: parsed.lastSaved || new Date().toISOString(),
+                        lastSavedFormatted: parsed.lastSavedFormatted || this.formatDate(new Date()),
+                        drafts: {
+                            part1Exercises: (parsed.drafts && parsed.drafts.part1Exercises) || {},
+                            part2Emails: (parsed.drafts && parsed.drafts.part2Emails) || {},
+                            part1Exams: (parsed.drafts && parsed.drafts.part1Exams) || {}
+                        },
+                        scores: {
+                            part1Exercises: (parsed.scores && parsed.scores.part1Exercises) || {},
+                            part2Emails: (parsed.scores && parsed.scores.part2Emails) || {},
+                            part1Exams: (parsed.scores && parsed.scores.part1Exams) || {}
+                        }
+                    };
+                }
+            } else {
+                this.data.studentName = state.studentName || "Học Viên";
+                this.data.lastSavedFormatted = this.formatDate(new Date());
+            }
+        } catch (e) {
+            console.warn('ProgressManager load warning:', e);
+        }
+    },
+
+    save(immediate = false) {
+        if (immediate) {
+            if (this.saveTimeout) clearTimeout(this.saveTimeout);
+            this.executeSave();
+        } else {
+            if (this.saveTimeout) clearTimeout(this.saveTimeout);
+            this.saveTimeout = setTimeout(() => {
+                this.executeSave();
+            }, 400);
+        }
+    },
+
+    executeSave() {
+        try {
+            const now = new Date();
+            this.data.lastSaved = now.toISOString();
+            this.data.lastSavedFormatted = this.formatDate(now);
+            this.data.studentName = state.studentName || this.data.studentName || "Học Viên";
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.data));
+            this.updateUI();
+        } catch (e) {
+            console.error('ProgressManager save error:', e);
+        }
+    },
+
+    formatDate(date) {
+        if (!(date instanceof Date)) date = new Date(date);
+        const hours = String(date.getHours()).padStart(2, '0');
+        const mins = String(date.getMinutes()).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${hours}:${mins} - ${day}/${month}/${year}`;
+    },
+
+    saveDraft(category, id, value) {
+        if (!this.data.drafts[category]) {
+            this.data.drafts[category] = {};
+        }
+        if (!value || value.trim() === '') {
+            delete this.data.drafts[category][id];
+        } else {
+            this.data.drafts[category][id] = value;
+        }
+        this.save();
+    },
+
+    getDraft(category, id) {
+        return (this.data.drafts[category] && this.data.drafts[category][id]) || '';
+    },
+
+    saveScore(category, id, scoreObj) {
+        if (!this.data.scores[category]) {
+            this.data.scores[category] = {};
+        }
+        this.data.scores[category][id] = scoreObj;
+        this.save(true);
+    },
+
+    getExamDraft(testId) {
+        return (this.data.drafts.part1Exams && this.data.drafts.part1Exams[testId]) || null;
+    },
+
+    saveExamDraft(testId, answersArray) {
+        if (!this.data.drafts.part1Exams) {
+            this.data.drafts.part1Exams = {};
+        }
+        this.data.drafts.part1Exams[testId] = [...answersArray];
+        this.save();
+    },
+
+    attachGlobalInputListener() {
+        document.addEventListener('input', (e) => {
+            const target = e.target;
+            if (!target || target.tagName !== 'TEXTAREA') return;
+
+            const id = target.id;
+            if (!id) return;
+
+            // 1. Part 1 Practice Sentences (id: prac-input-2-1-1, etc.)
+            if (id.startsWith('prac-input-')) {
+                const key = id.replace('prac-input-', '');
+                this.saveDraft('part1Exercises', key, target.value);
+            }
+            // 2. Part 2 Email Responses (id: lab-input-6-4-1, lab-input-q01, etc.)
+            else if (id.startsWith('lab-input-')) {
+                const key = id.replace('lab-input-', '');
+                this.saveDraft('part2Emails', key, target.value);
+            }
+            // 3. Part 1 ETS Mock Test Simulator
+            else if (id === 'etsAnswerInput' && state.exam && state.exam.active) {
+                state.exam.answers[state.exam.currentQuestionIndex] = target.value;
+                this.saveExamDraft(state.exam.testId, state.exam.answers);
+            }
+        });
+    },
+
+    restoreAllVisibleInputs() {
+        // 1. Restore all prac-input-* in current DOM
+        document.querySelectorAll('textarea[id^="prac-input-"]').forEach(ta => {
+            const key = ta.id.replace('prac-input-', '');
+            const saved = this.getDraft('part1Exercises', key);
+            if (saved && ta.value !== saved) {
+                ta.value = saved;
+            }
+        });
+
+        // 2. Restore all lab-input-* in current DOM
+        document.querySelectorAll('textarea[id^="lab-input-"]').forEach(ta => {
+            const key = ta.id.replace('lab-input-', '');
+            const saved = this.getDraft('part2Emails', key);
+            if (saved && ta.value !== saved) {
+                ta.value = saved;
+                if (typeof window.updateLabWordCount === 'function') {
+                    window.updateLabWordCount(key);
+                }
+            }
+        });
+
+        // 3. If in mock test, restore current question
+        const etsTa = document.getElementById('etsAnswerInput');
+        if (etsTa && state.exam && state.exam.active) {
+            const testId = state.exam.testId;
+            const savedAnswers = this.getExamDraft(testId);
+            if (savedAnswers && savedAnswers[state.exam.currentQuestionIndex] !== undefined) {
+                if (etsTa.value !== savedAnswers[state.exam.currentQuestionIndex]) {
+                    etsTa.value = savedAnswers[state.exam.currentQuestionIndex];
+                    if (typeof updateCharCount === 'function') {
+                        updateCharCount(etsTa.value);
+                    }
+                }
+            }
+        }
+    },
+
+    calculateStats() {
+        const p1Exercises = Object.keys(this.data.drafts.part1Exercises || {}).filter(k => (this.data.drafts.part1Exercises[k] || '').trim().length > 0);
+        const p2Emails = Object.keys(this.data.drafts.part2Emails || {}).filter(k => (this.data.drafts.part2Emails[k] || '').trim().length > 0);
+        
+        let totalWords = 0;
+        p1Exercises.forEach(k => {
+            const txt = this.data.drafts.part1Exercises[k] || '';
+            totalWords += txt.trim().split(/\s+/).filter(Boolean).length;
+        });
+        p2Emails.forEach(k => {
+            const txt = this.data.drafts.part2Emails[k] || '';
+            totalWords += txt.trim().split(/\s+/).filter(Boolean).length;
+        });
+
+        const p1Exams = this.data.drafts.part1Exams || {};
+        Object.keys(p1Exams).forEach(tId => {
+            const ansArr = p1Exams[tId] || [];
+            ansArr.forEach(ans => {
+                if (ans && ans.trim()) {
+                    totalWords += ans.trim().split(/\s+/).filter(Boolean).length;
+                }
+            });
+        });
+
+        const totalItems = p1Exercises.length + p2Emails.length;
+        return {
+            part1Count: p1Exercises.length,
+            part2Count: p2Emails.length,
+            totalItems: totalItems,
+            totalWords: totalWords,
+            lastSavedFormatted: this.data.lastSavedFormatted || 'Vừa xong'
+        };
+    },
+
+    updateUI() {
+        const stats = this.calculateStats();
+        
+        // Sidebar count
+        const sbCount = document.getElementById('sidebarProgressCount');
+        if (sbCount) {
+            sbCount.textContent = `${stats.totalItems} bài`;
+        }
+
+        // Modal fields
+        const modalName = document.getElementById('progressModalStudentName');
+        if (modalName) modalName.textContent = this.data.studentName || state.studentName || 'Học Viên';
+
+        const modalSaved = document.getElementById('progressModalLastSaved');
+        if (modalSaved) modalSaved.textContent = stats.lastSavedFormatted;
+
+        const statP1 = document.getElementById('statPart1Count');
+        if (statP1) statP1.textContent = stats.part1Count;
+
+        const statP2 = document.getElementById('statPart2Count');
+        if (statP2) statP2.textContent = stats.part2Count;
+
+        const statWords = document.getElementById('statTotalWords');
+        if (statWords) statWords.textContent = stats.totalWords;
+
+        const summaryCount = document.getElementById('draftsSummaryCount');
+        if (summaryCount) summaryCount.textContent = `${stats.totalItems} bài viết đã lưu`;
+
+        // Render recent drafts
+        this.renderDraftsList();
+    },
+
+    renderDraftsList() {
+        const listEl = document.getElementById('recentDraftsList');
+        if (!listEl) return;
+
+        const items = [];
+        const p1Exercises = this.data.drafts.part1Exercises || {};
+        Object.keys(p1Exercises).forEach(key => {
+            const val = p1Exercises[key] || '';
+            if (val.trim()) {
+                const words = val.trim().split(/\s+/).filter(Boolean).length;
+                items.push({
+                    type: 'Part 01 • Câu mô tả tranh',
+                    id: key,
+                    title: `Bài tập [${key}]: "${val.slice(0, 42)}${val.length > 42 ? '...' : ''}"`,
+                    words: `${words} từ`
+                });
+            }
+        });
+
+        const p2Emails = this.data.drafts.part2Emails || {};
+        Object.keys(p2Emails).forEach(key => {
+            const val = p2Emails[key] || '';
+            if (val.trim()) {
+                const words = val.trim().split(/\s+/).filter(Boolean).length;
+                const label = key.startsWith('q') ? `Đề thi thực chiến ${key.toUpperCase()}` : `Bài tập Lab [${key}]`;
+                items.push({
+                    type: 'Part 02 • Phản hồi Email',
+                    id: key,
+                    title: `${label}: "${val.slice(0, 42)}${val.length > 42 ? '...' : ''}"`,
+                    words: `${words} từ`
+                });
+            }
+        });
+
+        if (items.length === 0) {
+            listEl.innerHTML = `
+                <div style="text-align: center; color: var(--text-muted); padding: 18px 0; font-size: 0.88rem;">
+                    <i class="fa-solid fa-pen-nib" style="margin-right: 6px;"></i> Bạn chưa có bài viết nào được lưu. Hãy chọn một chủ điểm và bắt đầu viết câu nhé!
+                </div>
+            `;
+            return;
+        }
+
+        // Show newest 15 items
+        listEl.innerHTML = items.slice(-15).reverse().map(item => `
+            <div class="draft-item-row">
+                <div style="overflow: hidden;">
+                    <span style="font-size: 0.72rem; font-weight: 800; color: var(--color-cyan); text-transform: uppercase; display: block; margin-bottom: 2px;">${item.type}</span>
+                    <div class="draft-item-title">${item.title}</div>
+                </div>
+                <div class="draft-item-meta">
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 8px; border-radius: 8px; font-weight: 700;">${item.words}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+};
+
+window.ProgressManager = ProgressManager;
+
+// ============================================================================
+// MODAL CONTROLLER & IMPORT / EXPORT FUNCTIONS
+// ============================================================================
+window.openProgressBackupModal = function() {
+    ProgressManager.updateUI();
+    const overlay = document.getElementById('progressBackupOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+};
+
+window.closeProgressBackupModal = function() {
+    const overlay = document.getElementById('progressBackupOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+};
+
+window.exportProgressJSON = function() {
+    try {
+        ProgressManager.data.lastSaved = new Date().toISOString();
+        ProgressManager.data.lastSavedFormatted = ProgressManager.formatDate(new Date());
+        ProgressManager.data.studentName = state.studentName || 'HocVien';
+        
+        // Also capture flower garden if available
+        try {
+            const gardenData = localStorage.getItem('flower_garden_data_v1') || localStorage.getItem('flower_garden_toeic_v1');
+            if (gardenData) {
+                ProgressManager.data.flowerGarden = JSON.parse(gardenData);
+            }
+        } catch(e) {}
+
+        const jsonStr = JSON.stringify(ProgressManager.data, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+        const student = (state.studentName || 'HocVien').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '_');
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+        const fileName = `TOEIC_Writing_TienDo_${student}_${dateStr}.json`;
+
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+
+        showToast(`✅ Đã tải file sao lưu: ${fileName}! Hãy lưu trữ cẩn thận nhé!`, 'success');
+    } catch (e) {
+        console.error('Export progress error:', e);
+        alert('⚠️ Có lỗi khi tạo file sao lưu: ' + e.message);
+    }
+};
+
+window.copyProgressCode = function() {
+    try {
+        ProgressManager.data.lastSaved = new Date().toISOString();
+        ProgressManager.data.studentName = state.studentName || 'HocVien';
+        const jsonStr = JSON.stringify(ProgressManager.data);
+        const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+        const fullCode = `TOEIC_WRITING_BACKUP::${b64}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(fullCode).then(() => {
+                showToast('📋 Đã sao chép mã sao lưu vào bộ nhớ tạm!', 'success');
+            }).catch(() => {
+                prompt('Vui lòng sao chép toàn bộ chuỗi mã sao lưu này:', fullCode);
+            });
+        } else {
+            prompt('Vui lòng sao chép toàn bộ chuỗi mã sao lưu này:', fullCode);
+        }
+    } catch (e) {
+        console.error('Copy progress code error:', e);
+        alert('⚠️ Có lỗi xảy ra khi tạo mã sao lưu: ' + e.message);
+    }
+};
+
+window.togglePasteCodeArea = function() {
+    const area = document.getElementById('pasteCodeSection');
+    if (!area) return;
+    area.style.display = (area.style.display === 'none' || !area.style.display) ? 'block' : 'none';
+    if (area.style.display === 'block') {
+        const txt = document.getElementById('progressCodeTextarea');
+        if (txt) txt.focus();
+    }
+};
+
+window.handleProgressFileSelect = function(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            applyRestoredProgress(parsed);
+            event.target.value = '';
+        } catch (err) {
+            alert('⚠️ File sao lưu không hợp lệ hoặc bị lỗi định dạng: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+};
+
+window.importProgressFromCode = function() {
+    const txt = document.getElementById('progressCodeTextarea');
+    if (!txt || !txt.value.trim()) {
+        alert('Vui lòng dán chuỗi mã sao lưu vào ô nhập!');
+        return;
+    }
+    let raw = txt.value.trim();
+    if (raw.startsWith('TOEIC_WRITING_BACKUP::')) {
+        raw = raw.replace('TOEIC_WRITING_BACKUP::', '');
+        try {
+            const jsonStr = decodeURIComponent(escape(atob(raw)));
+            const parsed = JSON.parse(jsonStr);
+            applyRestoredProgress(parsed);
+            txt.value = '';
+            togglePasteCodeArea();
+        } catch(e) {
+            alert('⚠️ Mã sao lưu không đúng định dạng! Vui lòng kiểm tra lại.');
+        }
+    } else {
+        try {
+            const parsed = JSON.parse(raw);
+            applyRestoredProgress(parsed);
+            txt.value = '';
+            togglePasteCodeArea();
+        } catch(e) {
+            alert('⚠️ Mã sao lưu không đúng định dạng! Vui lòng kiểm tra lại.');
+        }
+    }
+};
+
+function applyRestoredProgress(parsed) {
+    if (!parsed || typeof parsed !== 'object') {
+        alert('⚠️ Dữ liệu sao lưu không hợp lệ!');
+        return;
+    }
+
+    const student = parsed.studentName || 'Học Viên';
+    const stats = {
+        p1: Object.keys((parsed.drafts && parsed.drafts.part1Exercises) || {}).length,
+        p2: Object.keys((parsed.drafts && parsed.drafts.part2Emails) || {}).length
+    };
+
+    const confirmMsg = `XÁC NHẬN KHÔI PHỤC TIẾN ĐỘ:\n\n` +
+        `• Học viên: ${student}\n` +
+        `• Part 01 đã lưu: ${stats.p1} câu\n` +
+        `• Part 02 đã soạn: ${stats.p2} email\n` +
+        `• Thời gian sao lưu: ${parsed.lastSavedFormatted || 'Không rõ'}\n\n` +
+        `Bạn có chắc chắn muốn nạp dữ liệu này vào trình duyệt không?`;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    ProgressManager.data = {
+        system: "TOEIC_WRITING_MASTERCLASS",
+        version: "2026.1",
+        studentName: student,
+        lastSaved: new Date().toISOString(),
+        lastSavedFormatted: ProgressManager.formatDate(new Date()),
+        drafts: {
+            part1Exercises: (parsed.drafts && parsed.drafts.part1Exercises) || {},
+            part2Emails: (parsed.drafts && parsed.drafts.part2Emails) || {},
+            part1Exams: (parsed.drafts && parsed.drafts.part1Exams) || {}
+        },
+        scores: {
+            part1Exercises: (parsed.scores && parsed.scores.part1Exercises) || {},
+            part2Emails: (parsed.scores && parsed.scores.part2Emails) || {},
+            part1Exams: (parsed.scores && parsed.scores.part1Exams) || {}
+        }
+    };
+
+    // Update student name
+    state.studentName = student;
+    localStorage.setItem('toeic_student_name', student);
+    const sbName = document.getElementById('sidebarStudentName');
+    if (sbName) sbName.textContent = student;
+    const avatar = document.getElementById('profileAvatar');
+    if (avatar) avatar.textContent = student.charAt(0).toUpperCase();
+
+    // Restore flower garden if present
+    if (parsed.flowerGarden) {
+        try {
+            localStorage.setItem('flower_garden_data_v1', JSON.stringify(parsed.flowerGarden));
+            localStorage.setItem('flower_garden_toeic_v1', JSON.stringify(parsed.flowerGarden));
+        } catch(e) {}
+    }
+
+    ProgressManager.save(true);
+    ProgressManager.restoreAllVisibleInputs();
+    ProgressManager.updateUI();
+
+    if (typeof triggerConfetti === 'function') {
+        triggerConfetti();
+    }
+
+    showToast(`🎉 Đã khôi phục thành công! Đã nạp ${stats.p1 + stats.p2} bài viết của ${student}.`, 'success');
+}
+
+window.confirmResetProgress = function() {
+    if (confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN ĐẶT LẠI (RESET) TOÀN BỘ BÀI VIẾT KHÔNG?\n\nToàn bộ câu và email bạn đã soạn thảo trên máy này sẽ bị xóa để luyện lại từ đầu.\n\n(Khuyên bạn nên bấm "TẢI FILE SAO LƯU" trước khi reset để không bị mất dữ liệu!)')) {
+        if (confirm('Xác nhận lần 2: Toàn bộ bài làm sẽ được làm mới về 0. Bạn có chắc không?')) {
+            ProgressManager.data.drafts = {
+                part1Exercises: {},
+                part2Emails: {},
+                part1Exams: {}
+            };
+            ProgressManager.data.scores = {
+                part1Exercises: {},
+                part2Emails: {},
+                part1Exams: {}
+            };
+            ProgressManager.save(true);
+
+            // Clear all textareas in DOM
+            document.querySelectorAll('textarea[id^="prac-input-"], textarea[id^="lab-input-"], #etsAnswerInput').forEach(ta => {
+                ta.value = '';
+                if (ta.id.startsWith('lab-input-')) {
+                    const key = ta.id.replace('lab-input-', '');
+                    if (typeof window.updateLabWordCount === 'function') {
+                        window.updateLabWordCount(key);
+                    }
+                }
+            });
+
+            ProgressManager.updateUI();
+            showToast('🔄 Đã làm mới toàn bộ bài viết và tiến độ.', 'warning');
+        }
     }
 };

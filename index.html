@@ -103,6 +103,15 @@
                 </div>
                 <button id="changeNameBtn" title="Đổi tên học viên" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 6px; transition: all 0.2s; flex-shrink: 0;"><i class="fa-solid fa-user-pen"></i></button>
             </div>
+
+            <!-- Widget Sao Lưu Tiến Độ Trong Sidebar -->
+            <div class="sidebar-backup-wrap" id="sidebarBackupWrap">
+                <button type="button" class="sidebar-backup-btn" id="sidebarBackupBtn" onclick="openProgressBackupModal()" title="Sao lưu & Quản lý tiến độ học tập">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span class="sidebar-backup-text">Sao lưu tiến độ</span>
+                    <span id="sidebarProgressCount" class="sidebar-backup-badge">0 bài</span>
+                </button>
+            </div>
             
             <nav class="sidebar-nav">
                 <div class="nav-item active" id="navHomeBtn" data-nav="home">
@@ -154,11 +163,18 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- Top Navbar with brand header -->
+            <!-- Top Navbar with brand header & Quick Actions -->
             <header class="top-navbar">
                 <a href="https://www.facebook.com/nguyetpham28" target="_blank" class="galaxy-brand" title="Ghé thăm Facebook của tôi!">
                     ENGLISH WITH MISS NGUYET
                 </a>
+                <div class="topbar-actions" id="topbarActions">
+                    <button type="button" class="topbar-backup-btn" id="topbarBackupBtn" onclick="openProgressBackupModal()" title="Sao lưu & Phục hồi tiến độ bài viết">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span class="btn-backup-label">Sao lưu tiến độ</span>
+                        <span class="backup-live-dot" title="Tự động lưu thời gian thực"></span>
+                    </button>
+                </div>
             </header>
 
             <!-- Dynamic Content Area wrapper -->
@@ -166,6 +182,138 @@
                 <!-- Injected via JavaScript -->
             </div>
         </main>
+    </div>
+
+    <!-- =========================================================
+         MODAL: SAO LƯU & QUẢN LÝ TIẾN ĐỘ BÀI VIẾT
+         ========================================================== -->
+    <div class="progress-backup-overlay" id="progressBackupOverlay" style="display: none;">
+        <div class="progress-backup-modal">
+            <!-- Modal Header -->
+            <div class="progress-modal-header">
+                <div>
+                    <div class="progress-modal-title">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> QUẢN LÝ & SAO LƯU TIẾN ĐỘ BÀI VIẾT
+                    </div>
+                    <div class="progress-modal-subtitle">
+                        Học viên: <strong id="progressModalStudentName" style="color: var(--color-cyan);">Học Viên</strong> • 
+                        Trạng thái: <span class="backup-status-pill"><i class="fa-solid fa-circle-check"></i> Đang tự động lưu</span> • 
+                        Lưu gần nhất: <span id="progressModalLastSaved">Vừa xong</span>
+                    </div>
+                </div>
+                <button type="button" class="progress-modal-close" onclick="closeProgressBackupModal()">&times;</button>
+            </div>
+
+            <!-- Dashboard Stats Grid -->
+            <div class="progress-stats-grid">
+                <!-- Card 1: Part 01 -->
+                <div class="progress-stat-card card-part1">
+                    <div class="stat-card-title"><i class="fa-solid fa-pen"></i> PART 01 • CÂU ĐÃ VIẾT</div>
+                    <div class="stat-card-value" id="statPart1Count">0</div>
+                    <div class="stat-card-desc">câu thực hành & mô phỏng</div>
+                </div>
+
+                <!-- Card 2: Part 02 -->
+                <div class="progress-stat-card card-part2">
+                    <div class="stat-card-title"><i class="fa-solid fa-envelope-open-text"></i> PART 02 • EMAIL ĐÃ SOẠN</div>
+                    <div class="stat-card-value" id="statPart2Count">0</div>
+                    <div class="stat-card-desc">bài tập & 22 đề thực chiến</div>
+                </div>
+
+                <!-- Card 3: Words -->
+                <div class="progress-stat-card card-words">
+                    <div class="stat-card-title"><i class="fa-solid fa-font"></i> TỔNG SỐ TỪ ĐÃ VIẾT</div>
+                    <div class="stat-card-value" id="statTotalWords">0</div>
+                    <div class="stat-card-desc">từ tiếng Anh đã tích lũy</div>
+                </div>
+
+                <!-- Card 4: Status -->
+                <div class="progress-stat-card card-status">
+                    <div class="stat-card-title"><i class="fa-solid fa-shield-halved"></i> BẢO TOÀN DỮ LIỆU</div>
+                    <div class="stat-card-value" style="font-size: 1.25rem; margin-top: 6px; color: #10b981;">100% AN TOÀN</div>
+                    <div class="stat-card-desc">Tự động lưu vào trình duyệt</div>
+                </div>
+            </div>
+
+            <!-- Action Grid (Export & Import) -->
+            <div class="progress-actions-grid">
+                <!-- Box 1: Export -->
+                <div class="progress-action-box box-export">
+                    <div>
+                        <div class="action-box-title">
+                            <i class="fa-solid fa-file-arrow-down"></i> 1. XUẤT & SAO LƯU TIẾN ĐỘ
+                        </div>
+                        <p class="action-box-desc">
+                            Tải file sao lưu về máy để bảo toàn toàn bộ bài viết của bạn. Bạn có thể gửi file qua Zalo, Google Drive hoặc dùng khi chuyển sang điện thoại/máy tính khác.
+                        </p>
+                    </div>
+                    <div class="action-box-buttons">
+                        <button type="button" class="btn-progress-export" onclick="exportProgressJSON()">
+                            <i class="fa-solid fa-download"></i> TẢI FILE SAO LƯU (.JSON)
+                        </button>
+                        <button type="button" class="btn-progress-copy" onclick="copyProgressCode()">
+                            <i class="fa-solid fa-copy"></i> Sao chép mã sao lưu dạng văn bản
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Box 2: Import -->
+                <div class="progress-action-box box-import">
+                    <div>
+                        <div class="action-box-title">
+                            <i class="fa-solid fa-file-arrow-up"></i> 2. PHỤC HỒI TIẾN ĐỘ ĐÃ LƯU
+                        </div>
+                        <p class="action-box-desc">
+                            Chọn tệp <code>.json</code> đã sao lưu trước đó hoặc dán mã sao lưu để khôi phục lại toàn bộ bài viết và kết quả chấm điểm trên trình duyệt.
+                        </p>
+                    </div>
+                    <div class="action-box-buttons">
+                        <input type="file" id="progressFileInput" accept=".json,application/json" style="display:none;" onchange="handleProgressFileSelect(event)">
+                        <button type="button" class="btn-progress-import" onclick="document.getElementById('progressFileInput').click()">
+                            <i class="fa-solid fa-folder-open"></i> CHỌN FILE SAO LƯU ĐỂ PHỤC HỒI
+                        </button>
+                        <button type="button" class="btn-progress-paste" onclick="togglePasteCodeArea()">
+                            <i class="fa-solid fa-paste"></i> Dán mã sao lưu thủ công...
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collapsible Paste Code Section -->
+            <div id="pasteCodeSection" class="paste-code-section" style="display: none;">
+                <div class="paste-code-title">
+                    <i class="fa-solid fa-code"></i> Dán chuỗi mã sao lưu của bạn vào đây:
+                </div>
+                <textarea id="progressCodeTextarea" rows="3" placeholder="Nhấp chuột phải và Dán (Paste) chuỗi mã sao lưu tại đây..."></textarea>
+                <div class="paste-code-actions">
+                    <button type="button" class="btn-paste-cancel" onclick="togglePasteCodeArea()">Hủy</button>
+                    <button type="button" class="btn-paste-confirm" onclick="importProgressFromCode()">
+                        <i class="fa-solid fa-circle-check"></i> Xác nhận phục hồi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Drafts Summary List -->
+            <div class="progress-drafts-panel" id="progressDraftsPanel">
+                <div class="drafts-panel-header">
+                    <span class="drafts-panel-title"><i class="fa-solid fa-list-check"></i> BÀI VIẾT ĐÃ LƯU TRÊN TRÌNH DUYỆT</span>
+                    <span class="drafts-panel-subtitle" id="draftsSummaryCount">0 bài viết</span>
+                </div>
+                <div class="drafts-list-container" id="recentDraftsList">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer / Danger Zone -->
+            <div class="progress-modal-footer">
+                <button type="button" class="btn-reset-progress" onclick="confirmResetProgress()">
+                    <i class="fa-solid fa-trash-can"></i> Đặt lại (reset) toàn bộ bài viết
+                </button>
+                <button type="button" class="btn-close-modal" onclick="closeProgressBackupModal()">
+                    Đóng cửa sổ
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Toast Notifications Container -->

@@ -2753,3 +2753,640 @@ body.light-theme .formal-compare-table th {
     font-size: 0.82rem;
     font-weight: 700;
 }
+
+/* ==========================================================================
+   PROGRESS BACKUP & AUTO-SAVE SYSTEM STYLES (SAO LƯU TIẾN ĐỘ)
+   ========================================================================== */
+
+/* Topbar Backup Button */
+.topbar-actions {
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.topbar-backup-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1.5px solid #10b981;
+    color: #10b981;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.18);
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.topbar-backup-btn:hover {
+    background: rgba(16, 185, 129, 0.24);
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+    transform: translateY(-1px);
+    color: #34d399;
+}
+
+body.light-theme .topbar-backup-btn {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: #059669;
+    color: #059669;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.12);
+}
+
+body.light-theme .topbar-backup-btn:hover {
+    background: rgba(16, 185, 129, 0.18);
+    color: #047857;
+}
+
+.backup-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    display: inline-block;
+    animation: backupPulseDot 2s infinite ease-in-out;
+}
+
+@keyframes backupPulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Sidebar Backup Wrap & Button */
+.sidebar-backup-wrap {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.sidebar-backup-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1.5px solid rgba(16, 185, 129, 0.35);
+    color: #10b981;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.sidebar-backup-btn:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+}
+
+.sidebar-backup-badge {
+    margin-left: auto;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.02em;
+}
+
+.sidebar.collapsed .sidebar-backup-wrap {
+    padding: 8px 6px;
+    text-align: center;
+}
+
+.sidebar.collapsed .sidebar-backup-btn {
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.sidebar.collapsed .sidebar-backup-text,
+.sidebar.collapsed .sidebar-backup-badge {
+    display: none;
+}
+
+/* Modal Overlay & Card */
+.progress-backup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 4, 15, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 99998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: fadeInOverlay 0.25s ease-out;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.progress-backup-modal {
+    max-width: 880px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: rgba(18, 15, 38, 0.98);
+    border: 2px solid rgba(16, 185, 129, 0.45);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.65), 0 0 40px rgba(16, 185, 129, 0.15);
+    color: #ffffff;
+    font-family: inherit;
+    animation: slideUpModal 0.28s ease-out;
+}
+
+@keyframes slideUpModal {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+body.light-theme .progress-backup-modal {
+    background: #ffffff;
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 30px rgba(16, 185, 129, 0.1);
+    color: #0f172a;
+}
+
+/* Header */
+.progress-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px dashed rgba(16, 185, 129, 0.35);
+    padding-bottom: 16px;
+    margin-bottom: 22px;
+    gap: 16px;
+}
+
+.progress-modal-title {
+    color: #10b981;
+    font-size: 1.45rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+}
+
+body.light-theme .progress-modal-title {
+    color: #059669;
+}
+
+.progress-modal-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.backup-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #10b981;
+    font-weight: 700;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.progress-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 6px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.progress-modal-close:hover {
+    color: #ef4444;
+    transform: scale(1.1);
+}
+
+/* Stats Cards */
+.progress-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.progress-stat-card {
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.progress-stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-part1 {
+    background: rgba(0, 242, 254, 0.08);
+    border: 1.5px solid rgba(0, 242, 254, 0.3);
+}
+
+.card-part2 {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1.5px solid rgba(245, 158, 11, 0.3);
+}
+
+.card-words {
+    background: rgba(192, 132, 252, 0.08);
+    border: 1.5px solid rgba(192, 132, 252, 0.3);
+}
+
+.card-status {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1.5px solid rgba(16, 185, 129, 0.3);
+}
+
+.stat-card-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.card-part1 .stat-card-title { color: var(--color-cyan); }
+.card-part2 .stat-card-title { color: var(--color-gold); }
+.card-words .stat-card-title { color: var(--color-purple); }
+.card-status .stat-card-title { color: #10b981; }
+
+.stat-card-value {
+    font-size: 1.9rem;
+    font-weight: 900;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-card-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* Actions Grid (Export & Import) */
+.progress-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.progress-action-box {
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.2s;
+}
+
+.box-export {
+    background: rgba(16, 185, 129, 0.05);
+    border: 2px solid rgba(16, 185, 129, 0.35);
+}
+
+.box-import {
+    background: rgba(56, 189, 248, 0.05);
+    border: 2px solid rgba(56, 189, 248, 0.35);
+}
+
+body.light-theme .box-export {
+    background: #f0fdf4;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+body.light-theme .box-import {
+    background: #f0f9ff;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.action-box-title {
+    font-size: 1.08rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.box-export .action-box-title { color: #10b981; }
+.box-import .action-box-title { color: #0284c7; }
+
+.action-box-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.action-box-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-progress-export,
+.btn-progress-import {
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    color: #ffffff;
+}
+
+.btn-progress-export {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.btn-progress-export:hover {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-progress-import {
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+
+.btn-progress-import:hover {
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-progress-copy,
+.btn-progress-paste {
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-progress-copy:hover,
+.btn-progress-paste:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-muted);
+}
+
+body.light-theme .btn-progress-copy,
+body.light-theme .btn-progress-paste {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+/* Paste Code Area */
+.paste-code-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1.5px dashed rgba(16, 185, 129, 0.4);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 22px;
+}
+
+body.light-theme .paste-code-section {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.paste-code-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#progressCodeTextarea {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+body.light-theme #progressCodeTextarea {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+.paste-code-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-paste-cancel {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-paste-confirm {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #10b981;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Drafts Summary Panel */
+.progress-drafts-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+}
+
+body.light-theme .progress-drafts-panel {
+    background: #f8fafc;
+}
+
+.drafts-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.drafts-panel-title {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.drafts-panel-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.drafts-list-container {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.draft-item-row {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.86rem;
+}
+
+body.light-theme .draft-item-row {
+    background: #ffffff;
+    border-color: #e2e8f0;
+}
+
+.draft-item-title {
+    font-weight: 700;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.draft-item-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* Footer / Danger Zone */
+.progress-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 16px;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-reset-progress {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.btn-reset-progress:hover {
+    color: #dc2626;
+    text-decoration: underline;
+}
+
+.btn-close-modal {
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    padding: 8px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .topbar-backup-btn .btn-backup-label {
+        display: none;
+    }
+    .topbar-backup-btn {
+        padding: 8px 10px;
+    }
+    .progress-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
