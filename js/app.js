@@ -531,7 +531,8 @@ const COMPONENT_TABS_META = {
     // PART 02 - Chủ điểm 03: Khung Email chuẩn & Bài mẫu
     "6-1": { title: "KHUNG 5 PHẦN EMAIL", subtitle: "(EMAIL FRAMEWORK)", icon: "fa-solid fa-envelope-open-text", theme: "tab-theme-subject" },
     "6-2": { title: "FORMAL VS. LESS FORMAL", subtitle: "(PHONG CÁCH SONG SONG)", icon: "fa-solid fa-scale-balanced", theme: "tab-theme-verb" },
-    "6-3": { title: "BÀI MẪU & CASE STUDY", subtitle: "(4 SAMPLE RESPONSES)", icon: "fa-solid fa-file-signature", theme: "tab-theme-gold" }
+    "6-3": { title: "BÀI MẪU & CASE STUDY", subtitle: "(4 SAMPLE RESPONSES)", icon: "fa-solid fa-file-signature", theme: "tab-theme-gold" },
+    "6-4": { title: "LUYỆN VIẾT THỰC CHIẾN", subtitle: "(EMAIL WRITING LAB)", icon: "fa-solid fa-laptop-code", theme: "tab-theme-gold" }
 };
 
 function getChapterHTML(chapter) {
@@ -1416,3 +1417,148 @@ function triggerConfetti() {
 
     renderConfetti();
 }
+
+
+// ==========================================
+// EMAIL WRITING LAB INTERACTIVE FUNCTIONS
+// ==========================================
+const labTimers = {};
+
+window.startLabTimer = function(labId, totalSeconds) {
+    if (labTimers[labId] && labTimers[labId].interval) {
+        clearInterval(labTimers[labId].interval);
+    }
+
+    let remaining = (labTimers[labId] && labTimers[labId].remaining > 0) ? labTimers[labId].remaining : totalSeconds;
+    const display = document.getElementById(`lab-timer-${labId}`);
+    if (!display) return;
+
+    function renderTime() {
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        display.innerHTML = `<i class="fa-solid fa-stopwatch"></i> ${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        if (remaining <= 120 && remaining > 0) {
+            display.style.color = '#ef4444';
+        }
+    }
+    renderTime();
+
+    const interval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+            clearInterval(interval);
+            display.innerHTML = `<i class="fa-solid fa-bell"></i> Hết giờ 10:00!`;
+            display.style.color = '#ef4444';
+            alert(`⏰ HẾT GIỜ (10 PHÚT) CHO BÀI THI ${labId.toUpperCase()}!
+Hãy dừng gõ và bấm "CHẤM ĐIỂM & ĐÁNH GIÁ" để kiểm tra bài viết của bạn.`);
+        } else {
+            renderTime();
+        }
+    }, 1000);
+
+    labTimers[labId] = { interval, remaining };
+};
+
+window.resetLabTimer = function(labId, totalSeconds) {
+    if (labTimers[labId] && labTimers[labId].interval) {
+        clearInterval(labTimers[labId].interval);
+    }
+    labTimers[labId] = { interval: null, remaining: totalSeconds };
+    const display = document.getElementById(`lab-timer-${labId}`);
+    if (display) {
+        display.innerHTML = `<i class="fa-solid fa-stopwatch"></i> ${Math.floor(totalSeconds / 60)}:00`;
+        display.style.color = 'var(--color-gold)';
+    }
+};
+
+window.updateLabWordCount = function(labId) {
+    const input = document.getElementById(`lab-input-${labId}`);
+    const badge = document.getElementById(`lab-count-${labId}`);
+    if (!input || !badge) return;
+
+    const text = input.value.trim();
+    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    
+    let statusText = `${words} từ`;
+    if (words < 50) {
+        statusText += ' (Cần viết thêm: tối thiểu ~80 từ)';
+        badge.style.color = '#f59e0b';
+    } else if (words >= 80 && words <= 120) {
+        statusText += ' (Độ dài tối ưu 80-120 từ! 🎯)';
+        badge.style.color = '#10b981';
+    } else if (words > 120 && words <= 150) {
+        statusText += ' (Tương đối dài, chú ý kiểm tra lỗi chính tả)';
+        badge.style.color = '#00f2fe';
+    } else {
+        statusText += ' (Hơi dài so với chuẩn 10 phút, cẩn thận thiếu thời gian soát)';
+        badge.style.color = '#ef4444';
+    }
+    badge.textContent = statusText;
+};
+
+window.toggleLabModel = function(labId) {
+    const container = document.getElementById(`lab-result-${labId}`);
+    if (!container) return;
+    if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'block';
+        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        container.style.display = 'none';
+    }
+};
+
+window.checkEmailLab = function(labId, expectedElements) {
+    const input = document.getElementById(`lab-input-${labId}`);
+    const feedbackBox = document.getElementById(`lab-feedback-${labId}`);
+    if (!input || !feedbackBox) return;
+
+    const text = input.value.trim();
+    if (!text) {
+        alert('Vui lòng gõ bài viết vào ô trước khi bấm Chấm điểm!');
+        return;
+    }
+
+    const words = text.split(/\s+/).filter(Boolean).length;
+    const lower = text.toLowerCase();
+
+    const hasSalutation = /^(dear|hi|hello)\s+[a-z]+/im.test(text);
+    const hasSignOff = /(sincerely|best regards|regards|warm regards|thank you|best|cheers)[\s,]+/i.test(text);
+
+    let score = 4;
+    let scoreFeedback = '';
+
+    if (words < 50) {
+        score = 2;
+        scoreFeedback = 'Độ dài bài viết quá ngắn (< 50 từ). Bạn khó có thể đạt điểm tối đa nếu không diễn đạt đủ ý và cấu trúc câu đa dạng.';
+    } else if (words < 70) {
+        score = 3;
+        scoreFeedback = 'Bài viết đạt yêu cầu cơ bản, tuy nhiên nên phát triển thêm chi tiết để đạt ngưỡng chuẩn 80-120 từ của Score 4.';
+    } else {
+        score = 4;
+        scoreFeedback = 'Tuyệt vời! Độ dài bài viết rất chuẩn (80-120 từ), sẵn sàng cho band điểm tối đa Score 4!';
+    }
+
+    feedbackBox.style.display = 'block';
+    feedbackBox.innerHTML = `
+        <div style="background: rgba(15, 23, 42, 0.95); border: 2px solid ${score >= 4 ? '#10b981' : score === 3 ? '#00f2fe' : '#f59e0b'}; border-radius: 12px; padding: 20px; margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 10px;">
+                <span style="font-weight: 800; font-size: 1.15rem; color: ${score >= 4 ? '#10b981' : '#00f2fe'};"><i class="fa-solid fa-chart-simple"></i> KẾT QUẢ TỰ ĐÁNH GIÁ (DỰ BÁO: SCORE ${score}/4)</span>
+                <span style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">${words} words</span>
+            </div>
+            <div style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 14px; line-height: 1.6;">${scoreFeedback}</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 16px;">
+                <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border-left: 3px solid ${hasSalutation ? '#10b981' : '#ef4444'};"><div style="font-size: 0.8rem; color: #94a3b8;">Chào hỏi (Salutation)</div><div style="font-weight: 700; color: ${hasSalutation ? '#10b981' : '#ef4444'}; font-size: 0.9rem;">${hasSalutation ? '✅ Có lời chào chuẩn' : '⚠️ Thiếu "Dear Mr./Ms..."'}</div></div>
+                <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border-left: 3px solid ${hasSignOff ? '#10b981' : '#ef4444'};"><div style="font-size: 0.8rem; color: #94a3b8;">Chào kết (Sign-off)</div><div style="font-weight: 700; color: ${hasSignOff ? '#10b981' : '#ef4444'}; font-size: 0.9rem;">${hasSignOff ? '✅ Có ký tên / chào kết' : '⚠️ Thiếu "Sincerely / Best regards"'}</div></div>
+                <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border-left: 3px solid ${words >= 80 && words <= 130 ? '#10b981' : '#f59e0b'};"><div style="font-size: 0.8rem; color: #94a3b8;">Độ dài chuẩn ETS</div><div style="font-weight: 700; color: ${words >= 80 && words <= 130 ? '#10b981' : '#f59e0b'}; font-size: 0.9rem;">${words >= 80 && words <= 130 ? '✅ 80-120 từ tối ưu' : words < 80 ? '⚠️ Dưới 80 từ' : 'ℹ️ > 120 từ'}</div></div>
+            </div>
+            <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);"><div style="font-size: 0.85rem; font-weight: 700; color: var(--color-gold); margin-bottom: 6px;"><i class="fa-solid fa-list-check"></i> Checklist các nhiệm vụ đề bài yêu cầu:</div><ul style="margin: 0; padding-left: 20px; font-size: 0.88rem; color: #cbd5e1; line-height: 1.6;">${(expectedElements || []).map(elem => `<li>${elem}</li>`).join('')}</ul></div>
+            <div style="margin-top: 14px; text-align: right;"><button class="btn btn-secondary" style="font-size: 0.85rem;" onclick="toggleLabModel('${labId}')"><i class="fa-solid fa-eye"></i> Xem bài mẫu Score 4 để đối chiếu</button></div>
+        </div>
+    `;
+
+    feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    if (score >= 4 && hasSalutation && hasSignOff && typeof triggerConfetti === 'function') {
+        triggerConfetti();
+    }
+};
