@@ -3390,3 +3390,261 @@ body.light-theme .draft-item-row {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   ROW-BASED CARDS & THEME-AWARE TYPOGRAPHY (HIGH CONTRAST IN LIGHT & DARK)
+   ========================================================================== */
+
+/* Structure Row Cards (Công thức theo hàng) */
+.structure-row-card {
+    padding: 18px 22px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.25s ease;
+}
+
+.structure-row-card.card-cyan { border-left: 5px solid var(--color-cyan); }
+.structure-row-card.card-purple { border-left: 5px solid var(--color-purple); }
+.structure-row-card.card-gold { border-left: 5px solid var(--color-gold); }
+.structure-row-card.card-green { border-left: 5px solid var(--color-success); }
+.structure-row-card.card-red { border-left: 5px solid var(--color-error); }
+
+body.light-theme .structure-row-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.structure-row-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.structure-row-card .row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.structure-row-card .row-tag {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.structure-row-card.card-cyan .row-tag { color: var(--color-cyan); }
+.structure-row-card.card-purple .row-tag { color: var(--color-purple); }
+.structure-row-card.card-gold .row-tag { color: var(--color-gold); }
+.structure-row-card.card-green .row-tag { color: var(--color-success); }
+.structure-row-card.card-red .row-tag { color: var(--color-error); }
+
+.structure-row-card .row-badge {
+    padding: 3px 12px;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.structure-row-card.card-cyan .row-badge { background: rgba(0, 242, 254, 0.12); color: var(--color-cyan); }
+.structure-row-card.card-purple .row-badge { background: rgba(168, 85, 247, 0.12); color: var(--color-purple); }
+.structure-row-card.card-gold .row-badge { background: rgba(245, 158, 11, 0.12); color: var(--color-gold); }
+.structure-row-card.card-green .row-badge { background: rgba(16, 185, 129, 0.12); color: var(--color-success); }
+.structure-row-card.card-red .row-badge { background: rgba(239, 68, 68, 0.12); color: var(--color-error); }
+
+.structure-row-card .row-formula {
+    font-size: 1.12rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin: 2px 0 4px 0;
+}
+
+.structure-row-card .row-example {
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.structure-row-card .row-example strong {
+    color: var(--text-primary);
+}
+
+.structure-row-card .row-example em {
+    color: var(--color-cyan);
+    font-style: italic;
+    font-weight: 600;
+}
+
+body.light-theme .structure-row-card .row-example em {
+    color: #0369a1;
+}
+
+/* Step Row Cards (5 Bước Email theo hàng) */
+.step-row-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.25s ease;
+}
+
+.step-row-card.card-blue { border-left: 5px solid #3b82f6; }
+.step-row-card.card-green { border-left: 5px solid #10b981; }
+.step-row-card.card-gold { border-left: 5px solid var(--color-gold); }
+.step-row-card.card-purple { border-left: 5px solid #a855f7; }
+.step-row-card.card-cyan { border-left: 5px solid var(--color-cyan); }
+
+body.light-theme .step-row-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.step-row-card.highlight-step {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+body.light-theme .step-row-card.highlight-step {
+    background: #fffbeb;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.step-row-card .step-badge {
+    min-width: 95px;
+    font-weight: 800;
+    font-size: 0.92rem;
+    letter-spacing: 0.5px;
+}
+
+.step-row-card .step-title {
+    min-width: 170px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+}
+
+.step-row-card .step-desc {
+    color: var(--text-secondary);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.step-row-card .step-desc strong {
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .step-row-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* Header Component Rows (4 Thành phần Header theo hàng) */
+.header-component-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.25s ease;
+}
+
+.header-component-row.card-cyan { border-left: 5px solid var(--color-cyan); }
+.header-component-row.card-purple { border-left: 5px solid var(--color-purple); }
+.header-component-row.card-gold { border-left: 5px solid var(--color-gold); }
+.header-component-row.card-green { border-left: 5px solid #10b981; }
+
+body.light-theme .header-component-row {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.header-component-row .header-title-col {
+    min-width: 190px;
+}
+
+.header-component-row .header-title-col .header-tag {
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.header-component-row.card-cyan .header-tag { color: var(--color-cyan); }
+.header-component-row.card-purple .header-tag { color: var(--color-purple); }
+.header-component-row.card-gold .header-tag { color: var(--color-gold); }
+.header-component-row.card-green .header-tag { color: #10b981; }
+
+.header-component-row .header-title-col strong {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.header-component-row .header-desc {
+    color: var(--text-secondary);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .header-component-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Light Theme Overrides for Writing Labs & Exam Panels */
+body.light-theme .exam-writing-workspace {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-theme .exam-writing-workspace textarea {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-theme .exam-model-container {
+    background: #f0fdf4 !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+body.light-theme .exam-model-inner {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border-color: #e2e8f0 !important;
+}
+
+body.light-theme .exam-outline-container {
+    background: #eff6ff !important;
+    border-left-color: #2563eb !important;
+}
+
+body.light-theme .exam-feedback-card {
+    background: #ffffff !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+}

@@ -540,7 +540,7 @@ const COMPONENT_TABS_META = {
     "3-2": { title: "CÂU PHỨC LIÊN TỪ", subtitle: "(WHEN / BECAUSE)", icon: "fa-solid fa-diagram-project", theme: "tab-theme-verb" },
     "3-3": { title: "CHECKLIST BẪY ETS", subtitle: "(DOS & DON'TS)", icon: "fa-solid fa-shield-halved", theme: "tab-theme-modifier" },
     "3-4": { title: "BÀI LUYỆN TẬP", subtitle: "(10 CÂU TẠI LỚP)", icon: "fa-solid fa-pen-to-square", theme: "tab-theme-object" },
-    "3-5": { title: "BÀI TẬP VỀ NHÀ", subtitle: "(10 CÂU ETS PREPEDU)", icon: "fa-solid fa-house-laptop", theme: "tab-theme-gold" },
+    "3-5": { title: "BÀI TẬP VỀ NHÀ", subtitle: "(10 CÂU THỰC CHIẾN ETS)", icon: "fa-solid fa-house-laptop", theme: "tab-theme-gold" },
 
     // PART 02 - Chủ điểm 01: Tổng quan, Tiêu chí & Header
     "4-1": { title: "TIÊU CHÍ CHẤM THI", subtitle: "(SCORING CRITERIA)", icon: "fa-solid fa-award", theme: "tab-theme-subject" },
@@ -1606,12 +1606,12 @@ window.checkEmailLab = function(labId, expectedElements) {
 
     feedbackBox.style.display = 'block';
     feedbackBox.innerHTML = `
-        <div style="background: rgba(15, 23, 42, 0.95); border: 2px solid ${score >= 4 ? '#10b981' : score === 3 ? '#00f2fe' : '#f59e0b'}; border-radius: 12px; padding: 20px; margin-top: 20px;">
+        <div class="exam-feedback-card" style="background: var(--bg-card); border: 2px solid ${score >= 4 ? '#10b981' : score === 3 ? '#00f2fe' : '#f59e0b'}; border-radius: 12px; padding: 20px; margin-top: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 10px;">
                 <span style="font-weight: 800; font-size: 1.15rem; color: ${score >= 4 ? '#10b981' : '#00f2fe'};"><i class="fa-solid fa-chart-simple"></i> KẾT QUẢ TỰ ĐÁNH GIÁ (DỰ BÁO: SCORE ${score}/4)</span>
                 <span style="background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">${words} words</span>
             </div>
-            <div style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 14px; line-height: 1.6;">${scoreFeedback}</div>
+            <div style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 14px; line-height: 1.6;">${scoreFeedback}</div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 16px;">
                 <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border-left: 3px solid ${hasSalutation ? '#10b981' : '#ef4444'};"><div style="font-size: 0.8rem; color: #94a3b8;">Chào hỏi (Salutation)</div><div style="font-weight: 700; color: ${hasSalutation ? '#10b981' : '#ef4444'}; font-size: 0.9rem;">${hasSalutation ? '✅ Có lời chào chuẩn' : '⚠️ Thiếu "Dear Mr./Ms..."'}</div></div>
                 <div style="background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border-left: 3px solid ${hasSignOff ? '#10b981' : '#ef4444'};"><div style="font-size: 0.8rem; color: #94a3b8;">Chào kết (Sign-off)</div><div style="font-weight: 700; color: ${hasSignOff ? '#10b981' : '#ef4444'}; font-size: 0.9rem;">${hasSignOff ? '✅ Có ký tên / chào kết' : '⚠️ Thiếu "Sincerely / Best regards"'}</div></div>
