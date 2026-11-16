@@ -3827,3 +3827,342 @@ body.light-theme .exam-timer-box {
 body.light-theme .exam-timer-text {
     color: #b45309 !important;
 }
+
+/* ==========================================================================
+   AUTHENTIC ETS REAL EXAM UI & HIGH-CONTRAST ACCESSIBILITY
+   ========================================================================== */
+
+/* 1. EMAIL MOCKUP: Ample padding, balanced spacing, high contrast */
+.email-mockup {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 14px !important;
+    padding: 24px 28px !important;
+    margin: 20px 0 24px 0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+body.dark-theme .email-mockup,
+:root:not(.light-theme) .email-mockup {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(0, 242, 254, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+.email-header-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 9px;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.email-header-label {
+    font-weight: 800;
+    color: #475569;
+    min-width: 80px;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+body.dark-theme .email-header-label,
+:root:not(.light-theme) .email-header-label {
+    color: var(--color-cyan);
+}
+
+.email-header-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.email-body-area {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: #1e293b;
+}
+
+body.dark-theme .email-body-area,
+:root:not(.light-theme) .email-body-area {
+    border-top-color: rgba(255, 255, 255, 0.12);
+    color: #f1f5f9;
+}
+
+.email-body-area p {
+    margin-bottom: 12px;
+    line-height: 1.85;
+}
+
+/* 2. REAL ETS OFFICIAL DIRECTIONS BOX */
+.ets-official-directions {
+    background: #f8fafc;
+    border: 1.5px solid #6366f1;
+    border-left: 6px solid #4f46e5;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 22px 0 24px 0;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.08);
+}
+
+body.dark-theme .ets-official-directions,
+:root:not(.light-theme) .ets-official-directions {
+    background: rgba(30, 27, 75, 0.45);
+    border-color: rgba(168, 85, 247, 0.35);
+    border-left: 6px solid #a855f7;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.ets-directions-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+body.dark-theme .ets-directions-title-bar,
+:root:not(.light-theme) .ets-directions-title-bar {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.ets-directions-badge {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #4338ca;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.dark-theme .ets-directions-badge,
+:root:not(.light-theme) .ets-directions-badge {
+    color: #c084fc;
+}
+
+.ets-role-tag {
+    background: #ede9fe;
+    color: #4c1d95;
+    border: 1px solid #ddd6fe;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+body.dark-theme .ets-role-tag,
+:root:not(.light-theme) .ets-role-tag {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.4);
+    color: #f3e8ff;
+}
+
+.ets-prompt-main {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+body.dark-theme .ets-prompt-main,
+:root:not(.light-theme) .ets-prompt-main {
+    color: #f8fafc;
+}
+
+.ets-tasks-list {
+    margin: 8px 0 0 0;
+    padding-left: 24px;
+    list-style-type: disc;
+}
+
+.ets-tasks-list li {
+    font-size: 1.02rem;
+    line-height: 1.85;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+body.dark-theme .ets-tasks-list li,
+:root:not(.light-theme) .ets-tasks-list li {
+    color: #e2e8f0;
+}
+
+.ets-tasks-list li strong {
+    color: #047857;
+    background: #ecfdf5;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #a7f3d0;
+    font-weight: 800;
+}
+
+body.dark-theme .ets-tasks-list li strong,
+:root:not(.light-theme) .ets-tasks-list li strong {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+/* 3. COLLAPSIBLE PANELS (TRANSLATION, IDEAS, OUTLINE, MODEL) */
+.exam-collapsible-panel {
+    display: none;
+    margin-top: 18px;
+    padding: 22px 24px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    animation: fadeInSubSection 0.25s ease forwards;
+}
+
+/* Panel Translation & Analysis */
+.panel-translation {
+    background: #f8fafc !important;
+    border: 1.5px solid #3b82f6 !important;
+    border-left: 6px solid #2563eb !important;
+}
+
+body.dark-theme .panel-translation,
+:root:not(.light-theme) .panel-translation {
+    background: rgba(37, 99, 235, 0.08) !important;
+    border-color: rgba(59, 130, 246, 0.35) !important;
+    border-left: 6px solid #3b82f6 !important;
+}
+
+/* Panel Ideas Brainstorming */
+.panel-ideas {
+    background: #fffbeb !important;
+    border: 1.5px solid #f59e0b !important;
+    border-left: 6px solid #d97706 !important;
+}
+
+body.dark-theme .panel-ideas,
+:root:not(.light-theme) .panel-ideas {
+    background: rgba(245, 158, 11, 0.08) !important;
+    border-color: rgba(245, 158, 11, 0.35) !important;
+    border-left: 6px solid #f59e0b !important;
+}
+
+/* Panel Outline */
+.panel-outline {
+    background: #eff6ff !important;
+    border: 1.5px solid #60a5fa !important;
+    border-left: 6px solid #3b82f6 !important;
+}
+
+body.dark-theme .panel-outline,
+:root:not(.light-theme) .panel-outline {
+    background: rgba(59, 130, 246, 0.08) !important;
+    border-color: rgba(59, 130, 246, 0.35) !important;
+    border-left: 6px solid #3b82f6 !important;
+}
+
+/* Panel Model Answer */
+.panel-model {
+    background: #f0fdf4 !important;
+    border: 1.5px solid #34d399 !important;
+    border-left: 6px solid #10b981 !important;
+}
+
+body.dark-theme .panel-model,
+:root:not(.light-theme) .panel-model {
+    background: rgba(16, 185, 129, 0.08) !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+    border-left: 6px solid #10b981 !important;
+}
+
+.panel-header-title {
+    font-weight: 800;
+    font-size: 1.08rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.12);
+    padding-bottom: 8px;
+}
+
+.panel-translation .panel-header-title { color: #1d4ed8; }
+.panel-ideas .panel-header-title { color: #b45309; }
+.panel-outline .panel-header-title { color: #1d4ed8; }
+.panel-model .panel-header-title { color: #047857; }
+
+body.dark-theme .panel-translation .panel-header-title { color: #60a5fa; border-bottom-color: rgba(255, 255, 255, 0.15); }
+body.dark-theme .panel-ideas .panel-header-title { color: #fbbf24; border-bottom-color: rgba(255, 255, 255, 0.15); }
+body.dark-theme .panel-outline .panel-header-title { color: #60a5fa; border-bottom-color: rgba(255, 255, 255, 0.15); }
+body.dark-theme .panel-model .panel-header-title { color: #34d399; border-bottom-color: rgba(255, 255, 255, 0.15); }
+
+/* Idea Card Blocks (Mỗi yêu cầu 3 gợi ý) */
+.idea-card-block {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+body.dark-theme .idea-card-block,
+:root:not(.light-theme) .idea-card-block {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.idea-card-title {
+    font-weight: 800;
+    font-size: 0.98rem;
+    color: #b45309;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.dark-theme .idea-card-title,
+:root:not(.light-theme) .idea-card-title {
+    color: #fbbf24;
+}
+
+.idea-item-row {
+    font-size: 0.96rem;
+    line-height: 1.75;
+    color: #1e293b;
+    margin-bottom: 8px;
+    padding-left: 6px;
+}
+
+body.dark-theme .idea-item-row,
+:root:not(.light-theme) .idea-item-row {
+    color: #e2e8f0;
+}
+
+.idea-item-row strong {
+    color: #0f172a;
+}
+
+body.dark-theme .idea-item-row strong,
+:root:not(.light-theme) .idea-item-row strong {
+    color: #ffffff;
+}
+
+.idea-item-row em {
+    color: #0369a1;
+    font-style: italic;
+    font-weight: 600;
+}
+
+body.dark-theme .idea-item-row em,
+:root:not(.light-theme) .idea-item-row em {
+    color: var(--color-cyan);
+}

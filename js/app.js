@@ -1643,6 +1643,24 @@ window.toggleExamScreenshot = function(id) {
     el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 };
 
+window.toggleExamTranslation = function(id) {
+    const el = document.getElementById('exam-trans-' + id);
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    if (el.style.display === 'block') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+};
+
+window.toggleExamIdeas = function(id) {
+    const el = document.getElementById('exam-ideas-' + id);
+    if (!el) return;
+    el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    if (el.style.display === 'block') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+};
+
 window.toggleExamOutline = function(id) {
     const el = document.getElementById(`exam-outline-${id}`);
     if (!el) return;
